@@ -1,0 +1,1843 @@
+Sub 会議資料在庫ピボット()
+
+Application.ScreenUpdating = False
+Dim i As Long
+i = 0
+Set ZaikoTwoBook = Workbooks("在庫2.xls")
+Set ZaikoTwoSheet = Workbooks("在庫2.xls").Sheets("sheet1")
+
+Dim pvt As PivotTable
+Dim src As Range
+Set src = ZaikoTwoSheet.Range("A1").CurrentRegion
+ZaikoTwoBook.Sheets.Add.Name = "ピボット"
+ZaikoTwoBook.Sheets.Add.Name = "転記"
+
+Set pvt = _
+    ZaikoTwoBook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=ZaikoTwoBook.Sheets("ピボット").Range("A1"))
+
+
+With pvt
+    .AddFields RowFields:=Array("大分類名", "品番"), ColumnFields:=Array("店舗名"), PageFields:=Array("日数区分")
+    .AddDataField _
+        Field:=pvt.PivotFields("原価金額"), _
+        Function:=xlSum
+    .PivotFields("品番").Subtotals(1) = True
+    .PivotFields("品番").Subtotals(1) = False
+    .PivotFields("大分類名").Subtotals(1) = True
+    .PivotFields("大分類名").Subtotals(1) = False
+End With
+
+With ZaikoTwoBook
+    .Sheets("ピボット").Range("A3").CurrentRegion.Copy
+    .Sheets("転記").Range("A1").PasteSpecial Paste:=xlPasteValues
+End With
+
+With pvt
+    .PivotFields("日数区分").PivotItems("1年未満").Visible = False
+End With
+
+With ZaikoTwoBook
+    .Sheets("ピボット").Range("A3").CurrentRegion.Copy
+    .Sheets("転記").Range("A11").PasteSpecial Paste:=xlPasteValues
+End With
+
+With pvt
+    .PivotFields("日数区分").PivotItems("1年超").Visible = False
+End With
+
+With ZaikoTwoBook
+    .Sheets("ピボット").Range("A3").CurrentRegion.Copy
+    .Sheets("転記").Range("A21").PasteSpecial Paste:=xlPasteValues
+End With
+
+With ZaikoTwoBook.Sheets("転記")
+    .Columns("B").NumberFormatLocal = "yyyy/m/d"
+    .Columns("D").Insert Shift:=xlToRight
+    .Columns("F").Insert Shift:=xlToRight
+    .Columns("H").Insert Shift:=xlToRight
+    .Columns("J").Insert Shift:=xlToRight
+    .Columns("L").Insert Shift:=xlToRight
+    .Columns("N").Insert Shift:=xlToRight
+    .Columns("P").Insert Shift:=xlToRight
+End With
+
+With ZaikoTwoBook
+    .Sheets("転記").Range("C3:Q8").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("d5").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("C13:C18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("d15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("C23:C28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("d25").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("E13:E18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("F15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("E23:E28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("F25").PasteSpecial Paste:=xlPasteValues
+     .Sheets("転記").Range("G13:G18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("H15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("G23:G28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("H25").PasteSpecial Paste:=xlPasteValues
+     .Sheets("転記").Range("I13:I18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("J15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("I23:I28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("J25").PasteSpecial Paste:=xlPasteValues
+     .Sheets("転記").Range("K13:K18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("L15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("K23:K28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("L25").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("M13:M18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("N15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("M23:M28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("N25").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("O13:O18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("P15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("O23:O28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("P25").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("Q13:Q18").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("R15").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("Q23:Q28").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("R25").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Range("B3:B5").Copy
+    Workbooks("在庫会議.xlsx").Sheets("sheet1").Range("C5").PasteSpecial Paste:=xlPasteValues
+   
+    
+    
+    
+End With
+
+End Sub
+
+Sub 会議資料在庫準備()
+Application.ScreenUpdating = False
+Dim i As Long
+i = 0
+Set ZaikoTwoBook = Workbooks("在庫2.xls")
+Set ZaikoTwoSheet = Workbooks("在庫2.xls").Sheets("sheet1")
+
+Dim DayTwo As Date
+DayTwo = "2018/5/31"
+Dim OverDayTow As Date
+OverDayTow = "2016/10/31"
+DayTowPoint = DayTwo - OverDayTow
+
+Dim DayOne As Date
+DayOne = "2018/4/30"
+Dim OverDayOne As Date
+OverDayOne = "2016/10/31"
+DayOnePoint = DayOne - OverDayOne
+
+Dim DayZero As Date
+DayZero = "2018/3/31"
+Dim OverDayZero As Date
+OverDayZero = "2016/4/30"
+DayZeroPoint = DayZero - OverDayZero
+
+With ZaikoTwoSheet
+    .Rows("1:2").Delete
+    .Cells(65536, 7).End(xlUp).EntireRow.Delete
+    .Columns("B:C").Insert Shift:=xlToRight ', CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("B1") = "日数区分"
+    .Range("C1") = "日数"
+    .Range("AA2") = DayTowPoint
+    For i = 2 To .Cells(Rows.Count, 4).End(xlUp).Row
+        .Cells(i, 1).Value = .Cells(i, 1).Value
+        .Cells(i, 1).Value = .Cells(i, 1).Value - 0
+        .Cells(i, 3) = DayTwo - .Cells(i, 1).Value
+                
+        If .Cells(i, 1).Value = 0 Then
+            .Cells(i, 2).Value = "1年未満"
+        ElseIf DayTwo - .Cells(i, 1).Value >= .Range("AA2").Value Then
+            .Cells(i, 2).Value = "2年超"
+        ElseIf DayTwo - .Cells(i, 1).Value >= 365 Then
+            .Cells(i, 2).Value = "1年超"
+        Else
+            .Cells(i, 2).Value = "1年未満"
+        End If
+        
+        If .Cells(i, 20).Value <> "車体" Then
+            .Cells(i, 20).Value = "部品"
+        End If
+        .Cells(i, 26).Value = DayTwo
+    Next
+End With
+
+
+i = 0
+Set ZaikoOneBook = Workbooks("在庫1.xls")
+Set ZaikoOneSheet = Workbooks("在庫1.xls").Sheets("sheet1")
+
+With ZaikoOneSheet
+    .Rows("1:2").Delete
+    .Cells(65536, 7).End(xlUp).EntireRow.Delete
+    .Columns("B:C").Insert Shift:=xlToRight ', CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("B1") = "日数区分"
+    .Range("C1") = "日数"
+    .Range("AA2") = DayOnePoint
+    For i = 2 To .Cells(Rows.Count, 4).End(xlUp).Row
+        .Cells(i, 1).Value = .Cells(i, 1).Value
+        .Cells(i, 1).Value = .Cells(i, 1).Value - 0
+        .Cells(i, 3) = DayOne - .Cells(i, 1).Value
+        If .Cells(i, 1).Value = 0 Then
+            .Cells(i, 2).Value = "1年未満"
+        ElseIf DayOne - .Cells(i, 1).Value >= .Range("AA2").Value Then
+            .Cells(i, 2).Value = "2年超"
+        ElseIf DayOne - .Cells(i, 1).Value >= 365 Then
+            .Cells(i, 2).Value = "1年超"
+        Else
+            .Cells(i, 2).Value = "1年未満"
+        End If
+        If .Cells(i, 20).Value <> "車体" Then
+            .Cells(i, 20).Value = "部品"
+        End If
+        .Cells(i, 26).Value = DayOne
+    Next
+End With
+
+i = 0
+Set ZaikoZeroBook = Workbooks("在庫0.xls")
+Set ZaikoZeroSheet = Workbooks("在庫0.xls").Sheets("sheet1")
+
+With ZaikoZeroSheet
+    .Rows("1:2").Delete
+    .Cells(65536, 7).End(xlUp).EntireRow.Delete
+    .Columns("B:C").Insert Shift:=xlToRight ', CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("B1") = "日数区分"
+    .Range("C1") = "日数"
+    .Range("AA2") = DayZeroPoint
+    For i = 2 To .Cells(Rows.Count, 4).End(xlUp).Row
+        .Cells(i, 1).Value = .Cells(i, 1).Value
+        .Cells(i, 1).Value = .Cells(i, 1).Value - 0
+        .Cells(i, 3) = DayZero - .Cells(i, 1).Value
+        If .Cells(i, 1).Value = 0 Then
+            .Cells(i, 2).Value = "1年未満"
+        ElseIf DayZero - .Cells(i, 1).Value >= .Range("AA2").Value Then
+            .Cells(i, 2).Value = "2年超"
+        ElseIf DayZero - .Cells(i, 1).Value >= 365 Then
+            .Cells(i, 2).Value = "1年超"
+        Else
+            .Cells(i, 2).Value = "1年未満"
+        End If
+        If .Cells(i, 20).Value <> "車体" Then
+            .Cells(i, 20).Value = "部品"
+        End If
+        .Cells(i, 26).Value = DayZero
+    Next
+End With
+ZaikoOneSheet.Rows("1").Delete
+ZaikoOneSheet.Range("A1").CurrentRegion.Copy ZaikoTwoSheet.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0)
+ZaikoZeroSheet.Rows("1").Delete
+ZaikoZeroSheet.Range("A1").CurrentRegion.Copy ZaikoTwoSheet.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0)
+ZaikoTwoSheet.Columns("Z").NumberFormatLocal = "yyyy/m/d"
+
+With ZaikoTwoSheet
+    i = 0
+    For i = 2 To .Cells(Rows.Count, 4).End(xlUp).Row
+        .Cells(i, 23) = WorksheetFunction.VLookup(.Cells(i, 23), Workbooks("マスタ.xlsx").Sheets("会計店舗").Range("E1:F7"), 2, False)
+    Next
+End With
+
+End Sub
+Sub 期間指定車体在庫差異表()
+Application.ScreenUpdating = False
+Dim i As Long
+
+MsgBox "期首車体在庫表のファイルを指定してください｡", vbOKOnly, "期首車体在庫表を指定"
+Dim OldFilePath As String
+OldFilePath = Application.GetOpenFilename("Microsoft Excelブック,*.xls?")
+Workbooks.Open OldFilePath
+Dim OldFileName As String
+OldFileName = ActiveWorkbook.Name
+Set KisyuBook = Workbooks(OldFileName)
+Set KisyuSheet = KisyuBook.Sheets("sheet1")
+Dim KisyuDay As String
+KisyuDay = Mid(KisyuSheet.Range("A2"), 5, 12)
+
+MsgBox "期末車体在庫表のファイルを指定してください｡", vbOKOnly, "期末車体在庫表を指定"
+Dim NewFilePath As String
+NewFilePath = Application.GetOpenFilename("Microsoft Excelブック,*.xls?")
+Workbooks.Open NewFilePath
+Dim newFileName As String
+newFileName = ActiveWorkbook.Name
+Set KimatuBook = Workbooks(newFileName)
+Set KimatuSheet = KimatuBook.Sheets("sheet1")
+Dim KimatuDay As String
+KimatuDay = Mid(KimatuSheet.Range("A2"), 5, 12)
+
+With KisyuSheet '先頭行と合計を削除
+    .Rows("1:2").Delete
+    .Cells(65536, 6).End(xlUp).EntireRow.Delete
+End With
+
+With KimatuSheet  '先頭行と合計を削除
+    .Rows("1:2").Delete
+    .Cells(65536, 6).End(xlUp).EntireRow.Delete
+End With
+
+With KimatuSheet  '期末の情報を期首にコピーし統合
+    .Range(.Cells(2, 1), .Cells(.Cells(65536, 5).End(xlUp).Row, 5)).Copy _
+        KisyuSheet.Cells(KisyuSheet.Cells(65536, 1).End(xlUp).Row, 1).Offset(1, 0)
+    .Range(.Cells(2, 6), .Cells(.Cells(65536, 6).End(xlUp).Row, 6)).Copy _
+        KisyuSheet.Cells(KisyuSheet.Cells(65536, 6).End(xlUp).Row, 14).Offset(1, 0)
+    .Range(.Cells(2, 7), .Cells(.Cells(65536, 13).End(xlUp).Row, 13)).Copy _
+        KisyuSheet.Cells(KisyuSheet.Cells(65536, 7).End(xlUp).Row, 7).Offset(1, 0)
+End With
+
+With KisyuSheet  '統合した在庫表にカラーサイズの関係ないモデルコードを追加
+    .Range("N1") = "期末在庫"
+    .Range("O1") = "ﾓﾃﾞﾙｺｰﾄﾞ"
+    For i = 2 To .Cells(65536, 1).End(xlUp).Row
+        .Cells(i, 15) = Left(.Cells(i, 2), 1) & Left(.Cells(i, 13), 9)
+    Next
+End With
+
+
+Dim pvt As PivotTable
+Dim src As Range
+
+Set src = KisyuSheet.Range("A1").CurrentRegion
+KisyuBook.Sheets.Add.Name = "ピボット"
+
+Set pvt = _
+    KisyuBook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=KisyuBook.Sheets("ピボット").Range("A1"))
+
+
+With pvt    'モデル毎の集計をするためピボットテーブルを利用
+    .AddDataField _
+        Field:=pvt.PivotFields("在庫数"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=pvt.PivotFields("期末在庫"), _
+        Function:=xlSum
+    .AddFields _
+        RowFields:=Array("ﾓﾃﾞﾙｺｰﾄﾞ", "ブランド名", "年式", "品名")
+    .PivotFields("ﾓﾃﾞﾙｺｰﾄﾞ").Subtotals(1) = True
+    .PivotFields("ﾓﾃﾞﾙｺｰﾄﾞ").Subtotals(1) = False
+    .PivotFields("ブランド名").Subtotals(1) = True
+    .PivotFields("ブランド名").Subtotals(1) = False
+    .PivotFields("年式").Subtotals(1) = True
+    .PivotFields("年式").Subtotals(1) = False
+    .PivotFields("品名").Subtotals(1) = True
+    .PivotFields("品名").Subtotals(1) = False
+    .DataPivotField.Orientation = xlColumnField
+End With
+
+With KisyuBook  '集計したものを差異表に出力
+    .Sheets.Add.Name = "差異表"
+    .Sheets("ピボット").Range("A1").CurrentRegion.Copy
+    .Sheets("差異表").Range("A3").PasteSpecial Paste:=xlPasteValues
+End With
+
+
+With KisyuBook.Sheets("差異表")  '差異表に差異を追加
+    .Rows("3").Delete
+    .Range("E3") = "期首"
+    .Range("F3") = "期末"
+    .Range("G3") = "差異"
+    i = 0
+    For i = 4 To .Cells(65536, 3).End(xlUp).Row
+           .Cells(i, 7) = .Cells(i, 6) - .Cells(i, 5)
+    Next
+    .Columns("A:G").EntireColumn.AutoFit  '表を整える
+    .Range("A3").CurrentRegion.Borders.LineStyle = xlDash
+    .Range("A3").CurrentRegion.Borders.Weight = xlHairline
+    .Columns("A").Delete
+    .Range("A1") = KisyuDay & "～" & KimatuDay
+
+End With
+
+KisyuBook.Worksheets("差異表").Copy After:=ThisWorkbook.Worksheets("Sheet1")
+ThisWorkbook.Worksheets("差異表").Activate
+
+    Application.DisplayAlerts = False
+    KisyuBook.Close
+    KimatuBook.Close
+
+End Sub
+
+Sub 岩崎期間指定車体在庫差異表()
+Application.ScreenUpdating = False
+Dim i As Long
+Set KisyuBook = Workbooks("期首.xls")
+Set KisyuSheet = Workbooks("期首.xls").Sheets("sheet1")
+Set KimatuBook = Workbooks("期末.xls")
+Set KimatuSheet = Workbooks("期末.xls").Sheets("sheet1")
+Dim KisyuDay As String
+Dim KimatuDay As String
+KisyuDay = Mid(KisyuSheet.Range("A2"), 5, 12)
+KimatuDay = Mid(KimatuSheet.Range("A2"), 5, 12)
+
+With KisyuSheet '先頭行と合計を削除
+    .Rows("1:2").Delete
+    .Cells(65536, 6).End(xlUp).EntireRow.Delete
+End With
+
+With KimatuSheet  '先頭行と合計を削除
+    .Rows("1:2").Delete
+    .Cells(65536, 6).End(xlUp).EntireRow.Delete
+End With
+
+With KimatuSheet  '期末の情報を期首にコピーし統合
+    .Range(.Cells(2, 1), .Cells(.Cells(65536, 5).End(xlUp).Row, 5)).Copy _
+        KisyuSheet.Cells(KisyuSheet.Cells(65536, 1).End(xlUp).Row, 1).Offset(1, 0)
+    .Range(.Cells(2, 6), .Cells(.Cells(65536, 6).End(xlUp).Row, 6)).Copy _
+        KisyuSheet.Cells(KisyuSheet.Cells(65536, 6).End(xlUp).Row, 14).Offset(1, 0)
+    .Range(.Cells(2, 7), .Cells(.Cells(65536, 13).End(xlUp).Row, 13)).Copy _
+        KisyuSheet.Cells(KisyuSheet.Cells(65536, 7).End(xlUp).Row, 7).Offset(1, 0)
+End With
+
+With KisyuSheet  '統合した在庫表にカラーサイズの関係ないモデルコードを追加
+    .Range("N1") = "期末在庫"
+    .Range("O1") = "ﾓﾃﾞﾙｺｰﾄﾞ"
+    For i = 2 To .Cells(65536, 1).End(xlUp).Row
+        .Cells(i, 15) = Left(.Cells(i, 2), 1) & Left(.Cells(i, 13), 9)
+    Next
+End With
+
+
+Dim pvt As PivotTable
+Dim src As Range
+
+Set src = KisyuSheet.Range("A1").CurrentRegion
+KisyuBook.Sheets.Add.Name = "ピボット"
+
+Set pvt = _
+    KisyuBook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=KisyuBook.Sheets("ピボット").Range("A1"))
+
+
+With pvt    'モデル毎の集計をするためピボットテーブルを利用
+    .AddDataField _
+        Field:=pvt.PivotFields("在庫数"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=pvt.PivotFields("期末在庫"), _
+        Function:=xlSum
+    .AddFields _
+        RowFields:=Array("ﾓﾃﾞﾙｺｰﾄﾞ", "ブランド名", "年式", "品名")
+    .PivotFields("ﾓﾃﾞﾙｺｰﾄﾞ").Subtotals(1) = True
+    .PivotFields("ﾓﾃﾞﾙｺｰﾄﾞ").Subtotals(1) = False
+    .PivotFields("ブランド名").Subtotals(1) = True
+    .PivotFields("ブランド名").Subtotals(1) = False
+    .PivotFields("年式").Subtotals(1) = True
+    .PivotFields("年式").Subtotals(1) = False
+    .PivotFields("品名").Subtotals(1) = True
+    .PivotFields("品名").Subtotals(1) = False
+    .DataPivotField.Orientation = xlColumnField
+End With
+
+With KisyuBook  '集計したものを差異表に出力
+    .Sheets.Add.Name = "差異表"
+    .Sheets("ピボット").Range("A1").CurrentRegion.Copy
+    .Sheets("差異表").Range("A3").PasteSpecial Paste:=xlPasteValues
+End With
+
+
+With KisyuBook.Sheets("差異表")  '差異表に差異を追加
+    .Rows("3").Delete
+    .Range("E3") = "期首"
+    .Range("F3") = "期末"
+    .Range("G3") = "差異"
+    i = 0
+    For i = 4 To .Cells(65536, 3).End(xlUp).Row
+           .Cells(i, 7) = .Cells(i, 6) - .Cells(i, 5)
+    Next
+    .Columns("A:G").EntireColumn.AutoFit  '表を整える
+    .Range("A3").CurrentRegion.Borders.LineStyle = xlDash
+    .Range("A3").CurrentRegion.Borders.Weight = xlHairline
+    .Columns("A").Delete
+    .Range("A1") = KisyuDay & "～" & KimatuDay
+
+End With
+
+
+
+End Sub
+
+Sub 売上累計表0511()
+
+Application.ScreenUpdating = False
+
+Const tuki As Long = 5
+Const tukiKazu As Long = 31
+Const tukiMozi As String = "5月"
+
+Dim tenpoName As Variant
+tenpoName = Array("エバーレ", "上新庄", "吹田", "千里山", "千里", "伊丹", "本店", "全店")
+Dim y As Long
+Dim i As Long
+Dim x As Long
+Dim z As Long
+z = 0
+For z = 0 To 7
+    Dim pRuikei As Worksheet
+    Set pRuikei = Workbooks(tenpoName(z) & ".xls").Sheets("sheet1")
+    y = 0
+    i = 0
+    x = 0
+
+'上新庄
+
+    With pRuikei
+        .Range("D1") = tenpoName(z)
+        .Columns("I").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+        .Range("I3").Value = "損益比"
+
+        .Range("K1").Value = "経費"
+        .Range("N1").Value = "1日当"
+
+        .Cells(1, 12) = WorksheetFunction.VLookup(.Cells(1, 4), Workbooks("マスタ.xlsx").Worksheets("sheet2").Range("A1").CurrentRegion, tuki + 1, False)
+        .Cells(1, 15) = .Cells(1, 12) / tukiKazu
+
+        For y = 4 To .Cells(Rows.Count, 2).End(xlUp).Offset(-1, 0).Row
+            .Cells(y, 9).Value = .Cells(y, 8).Value / .Cells(1, 12).Value
+        Next
+
+        .Range("A2").ClearContents
+        .Columns("T:AW").Delete
+        .Columns("B:S").EntireColumn.AutoFit
+        .PageSetup.Orientation = xlLandscape
+        .PageSetup.PaperSize = xlPaperA3
+
+        For i = 4 To 35 Step 2
+            .Range(.Cells(i, 1), .Cells(i, 19)).Interior.Color = RGB(219, 238, 243)
+        Next
+
+
+        For x = 4 To 35
+            .Cells(x, 12).Value = .Cells(x, 12).Value
+            .Cells(x, 13).Value = .Cells(x, 13).Value
+        Next
+
+        .Range("L4:M35").NumberFormatLocal = "#,##0;[赤]-#,##0"
+        .Range("L1").NumberFormatLocal = "#,##0;[赤]-#,##0"
+        .Range("O1").NumberFormatLocal = "#,##0;[赤]-#,##0"
+        .Range("I4:I34").NumberFormatLocal = "0.0%"
+
+        .Rows("3:35").RowHeight = 23.25
+        .Range("A3:S35").Borders.LineStyle = xlDash
+        .Range("A3:S35").Borders.Weight = xlHairline
+        .Range("C1").Value = tukiMozi
+
+        .Range("I4").HorizontalAlignment = xlRight
+        .Range("I4").VerticalAlignment = xlCenter
+        .ExportAsFixedFormat Type:=xlTypePDF, Filename:="d:\abc\itizi\" & tenpoName(z) & ".pdf"
+
+    End With
+Next
+
+
+End Sub
+Sub 単品()
+'
+Application.ScreenUpdating = False
+
+Dim ptan As Worksheet
+Dim ptani1 As Long
+Dim ia As Long
+Dim ib As Long
+Dim ic As Long
+Dim id As Long
+Dim ie As Long
+Dim ig As Long
+Dim ii As Long
+Dim ih As Long
+Dim puri As Workbook
+Dim psii As Workbook
+Set puri = Workbooks("売上.xls")
+Set psii = Workbooks("仕入.xls")
+Set ptan = Workbooks("単品.xls").Sheets("sheet1")
+
+'売上
+puri.Worksheets("sheet1").Rows("1:2").Delete
+
+Dim pvt As PivotTable
+Dim src As Range
+
+Set src = puri.Worksheets("sheet1").Range("A1").CurrentRegion
+puri.Sheets.Add
+
+Set pvt = _
+    puri.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=puri.Sheets("sheet2").Range("A1"))
+
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("販売数"), _
+        Function:=xlSum
+End With
+
+With puri.Sheets("sheet1")
+    .Columns("A:L").Delete
+    .Columns("C:E").Delete
+    .Columns("H:L").Delete
+End With
+
+puri.Sheets.Add
+
+Dim myRange As Range
+Set myRange = puri.Sheets("sheet1").Range("A1").CurrentRegion
+
+With puri.Sheets("sheet1").Sort
+    .SortFields.Add myRange.Columns("G"), xlSortOnValues, xlAscending
+    .SetRange myRange
+    .Header = xlYes
+    .Orientation = xlTopToBottom
+    .Apply
+End With
+
+With myRange
+    .AutoFilter Field:=7, Criteria1:="0000000000000"
+    .Copy puri.Sheets("Sheet3").Range("A1")
+End With
+
+
+Dim i As Long
+
+With puri.Sheets("sheet3")
+    .Columns("B").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Columns("D:E").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("B1").Value = "粗利合計"
+    For i = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(i, 2) = .Cells(i, 1) - .Cells(i, 3)
+        .Cells(i, 5) = "17プロパー"
+    Next
+End With
+
+puri.Sheets.Add
+puri.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+puri.Sheets("Sheet4").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'仕入
+
+psii.Worksheets("sheet1").Rows("1:2").Delete
+
+Dim pvts As PivotTable
+Dim srcs As Range
+
+Set srcs = psii.Worksheets("sheet1").Range("A1").CurrentRegion
+psii.Sheets.Add
+Set pvts = _
+    psii.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=srcs). _
+            CreatePivotTable(tabledestination:=psii.Worksheets("sheet2").Range("A1"))
+With pvts
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvts.PivotFields("原価合計"), _
+        Function:=xlSum
+End With
+
+psii.Sheets("sheet1").Columns("A:L").Delete
+psii.Sheets("sheet1").Columns("F:L").Delete
+psii.Sheets.Add
+With psii.Sheets("sheet1").Range("A1")
+    .CurrentRegion.AutoFilter Field:=5, Criteria1:="2009999999999"
+    .CurrentRegion.Copy psii.Sheets("Sheet3").Range("A1")
+End With
+
+With psii.Sheets("sheet3")
+    .Columns("A").Cut .Columns("I")
+End With
+
+psii.Sheets.Add
+psii.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+psii.Sheets("Sheet4").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Dim psiii As Long
+psiii = 0
+
+For psiii = 3 To 7
+    If psii.Sheets("sheet4").Cells(psiii, 1) = "2009999999999" Then
+        psii.Sheets("sheet4").Cells(psiii, 1).EntireRow.Delete
+    End If
+Next
+'出庫
+
+Workbooks("出庫.xls").Worksheets("sheet1").Rows("1:2").Delete
+
+Dim pvti  As PivotTable
+Dim srci  As Range
+
+Workbooks("出庫.xls").Worksheets("sheet1").Range("M1") = "変更前金額"
+Set srci = Workbooks("出庫.xls").Worksheets("sheet1").Range("A1").CurrentRegion
+Workbooks("出庫.xls").Sheets.Add
+Set pvti = _
+    Workbooks("出庫.xls").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=srci). _
+            CreatePivotTable(tabledestination:=Workbooks("出庫.xls").Worksheets("sheet2").Range("A1"))
+With pvti
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvti.PivotFields("変更前金額"), _
+        Function:=xlSum
+End With
+
+Workbooks("出庫.xls").Sheets.Add
+Workbooks("出庫.xls").Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Workbooks("出庫.xls").Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'在庫
+
+With Workbooks("期首在庫.xls").Worksheets("sheet1")
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 7).End(xlUp).EntireRow.Delete
+    .Columns("O").Cut
+    .Columns("A").Insert Shift:=xlToRight
+    .Columns("B:G").Delete
+    .Columns("C:H").Delete
+    .Columns("D:P").Delete
+End With
+
+With Workbooks("期末在庫.xls").Worksheets("sheet1")
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 7).End(xlUp).EntireRow.Delete
+    .Columns("O").Cut
+    .Columns("A").Insert Shift:=xlToRight
+    .Columns("B:G").Delete
+    .Columns("C:H").Delete
+    .Columns("D:P").Delete
+End With
+
+
+
+'単品開始
+'不要行削除等項目整理
+With ptan
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 12).End(xlUp).EntireRow.Delete
+    .Columns("W:AA").Delete
+    .Columns("M:Q").Delete
+    .Columns("I").Delete
+    .Columns("G").Delete
+    .Columns("K:M").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("K1").Value = "原価額"
+    .Range("L1").Value = "掛率"
+    .Range("M1").Value = "特価区分"
+
+
+'特価区分
+    For ptani1 = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ptani1, 11) = .Cells(ptani1, 9) - .Cells(ptani1, 10)
+        If .Cells(ptani1, 6) = 0 Then
+            .Cells(ptani1, 12) = 0
+        Else
+            .Cells(ptani1, 12) = .Cells(ptani1, 7).Value / .Cells(ptani1, 6).Value
+        End If
+        
+        If (.Cells(ptani1, 12) > 0.55 Or .Cells(ptani1, 12) < 0.02) And .Cells(ptani1, 1) = 2018 Then
+            .Cells(ptani1, 13) = "18プロパー"
+        ElseIf (.Cells(ptani1, 12) > 0.55 Or .Cells(ptani1, 12) < 0.02) And .Cells(ptani1, 1) <> 2018 Then
+            .Cells(ptani1, 13) = "17プロパー"
+        Else
+            .Cells(ptani1, 13) = "特価"
+        End If
+    Next
+    
+    ptani1 = 0
+    
+    For ptani1 = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If .Cells(ptani1, 14) <> "車体" Then
+            .Cells(ptani1, 13) = ""
+        End If
+    Next
+    
+'外部情報をバーコードで結ぶ
+
+    .Range("S1").Value = "期首在庫"
+    .Range("T1").Value = "期末在庫"
+    .Range("U1").Value = "期末在庫数"
+    .Range("V1").Value = "仕入額"
+    .Range("W1").Value = "在庫移動"
+    .Range("X1").Value = "売数"
+
+    For ia = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("期首在庫.xls").Sheets("sheet1").Columns("A"), .Cells(ia, 18)) = 0 Then
+            .Cells(ia, 19) = 0
+        Else
+            .Cells(ia, 19) = WorksheetFunction.VLookup(.Cells(ia, 18), Workbooks("期首在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion, 3, False)
+        End If
+    Next
+
+    For ib = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("期末在庫.xls").Sheets("sheet1").Columns("A"), .Cells(ib, 18)) = 0 Then
+            .Cells(ib, 20) = 0
+        Else
+            .Cells(ib, 20) = WorksheetFunction.VLookup(.Cells(ib, 18), Workbooks("期末在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion, 3, False)
+        End If
+
+        If WorksheetFunction.CountIf(Workbooks("期末在庫.xls").Sheets("sheet1").Columns("A"), .Cells(ib, 18)) = 0 Then
+            .Cells(ib, 21) = 0
+        Else
+            .Cells(ib, 21) = WorksheetFunction.VLookup(.Cells(ib, 18), Workbooks("期末在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+
+    For ic = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("仕入.xls").Sheets("sheet4").Columns("A"), .Cells(ic, 18)) = 0 Then
+            .Cells(ic, 22) = 0
+        Else
+            .Cells(ic, 22) = WorksheetFunction.VLookup(.Cells(ic, 18), Workbooks("仕入.xls").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+
+
+    For id = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("出庫.xls").Sheets("sheet3").Columns("A"), .Cells(id, 18)) = 0 Then
+            .Cells(id, 23) = 0
+        Else
+            .Cells(id, 23) = WorksheetFunction.VLookup(.Cells(id, 18), Workbooks("出庫.xls").Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+
+
+    For ie = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("売上.xls").Sheets("sheet4").Columns("A"), .Cells(ie, 18)) = 0 Then
+            .Cells(ie, 24) = 0
+        Else
+            .Cells(ie, 24) = WorksheetFunction.VLookup(.Cells(ie, 18), Workbooks("売上.xls").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+
+    Next
+
+'部門打ち売上と値引き分をコピペ
+    psii.Sheets("sheet3").Range(psii.Sheets("sheet3").Cells(2, 2), psii.Sheets("sheet3").Cells(psii.Sheets("sheet3").Cells(Rows.Count, 9).End(xlUp).Row, 9)).Copy _
+        ptan.Cells(ptan.Cells(Rows.Count, 15).End(xlUp).Row, 15).Offset(1, 0)
+
+    puri.Sheets("sheet3").Range(puri.Sheets("sheet3").Cells(2, 1), puri.Sheets("sheet3").Cells(puri.Sheets("sheet3").Cells(Rows.Count, 10).End(xlUp).Row, 10)).Copy _
+        ptan.Cells(ptan.Cells(Rows.Count, 15).End(xlUp).Row, 9).Offset(1, 0)
+'カテゴリー分け変更
+    For ig = 2 To .Cells(Rows.Count, 16).End(xlUp).Row
+        .Cells(ig, 14) = WorksheetFunction.VLookup(.Cells(ig, 15), Workbooks("マスタ.xlsx").Worksheets("sheet1").Range("A1").CurrentRegion, 4, False)
+        If .Cells(ig, 16) = "電動自転車" Then
+            .Cells(ig, 2) = "電動自転車"
+        ElseIf .Cells(ig, 14) <> "車体" Then
+            .Cells(ig, 2) = WorksheetFunction.VLookup(.Cells(ig, 15), Workbooks("マスタ.xlsx").Worksheets("sheet1").Range("A1").CurrentRegion, 3, False)
+        Else
+            .Cells(ig, 2) = .Cells(ig, 2).Value
+        End If
+    Next
+'ブランドに特化区分を追加　ピボット用の店舗番号
+
+    .Range("Y1").Value = "売特"
+    .Range("Z1").Value = "在特"
+    .Range("AA1").Value = "売17"
+    .Range("AB1").Value = "在17"
+    .Range("AC1").Value = "売18"
+    .Range("AD1").Value = "在18"
+    .Range("AE1").Value = "番号店舗"
+
+    For ii = 2 To .Cells(Rows.Count, 16).End(xlUp).Row
+        If .Cells(ii, 13) = "特価" Then
+            .Cells(ii, 25) = .Cells(ii, 9).Value
+            .Cells(ii, 26) = .Cells(ii, 20).Value
+        Else
+            .Cells(ii, 25) = 0
+            .Cells(ii, 26) = 0
+        End If
+    
+        If .Cells(ii, 13) = "17プロパー" Then
+            .Cells(ii, 27) = .Cells(ii, 9).Value
+            .Cells(ii, 28) = .Cells(ii, 20).Value
+        Else
+            .Cells(ii, 27) = 0
+            .Cells(ii, 28) = 0
+        End If
+    
+    
+        If .Cells(ii, 13) = "18プロパー" Then
+            .Cells(ii, 29) = .Cells(ii, 9).Value
+            .Cells(ii, 30) = .Cells(ii, 20).Value
+        Else
+            .Cells(ii, 29) = 0
+            .Cells(ii, 30) = 0
+        End If
+    
+        .Cells(ii, 31) = WorksheetFunction.VLookup(.Cells(ii, 17), Workbooks("マスタ.xlsx").Sheets("会計店舗").Range("E1:F7"), 2, False)
+    Next
+    
+    For ih = 2 To Cells(Rows.Count, 15).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet1").Range("F2:F22"), .Cells(ih, 3)) = 0 Or .Cells(ih, 22) = 0 Then
+            .Cells(ih, 14).Value = .Cells(ih, 14).Value
+        Else
+            .Cells(ih, 14) = WorksheetFunction.VLookup(.Cells(ih, 3), Workbooks("マスタ.xlsx").Sheets("sheet1").Range("F2:G22"), 2, False)
+        End If
+    Next
+End With
+'最終ピボット
+Dim ptanpvt As PivotTable
+Dim ptansrc As Range
+
+Set ptansrc = ptan.Range("A1").CurrentRegion
+Workbooks("単品.xls").Sheets.Add
+Set ptanpvt = _
+    Workbooks("単品.xls").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=ptansrc). _
+            CreatePivotTable(tabledestination:=Workbooks("単品.xls").Sheets("sheet2").Range("A1"))
+
+With ptanpvt
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売上額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("粗利額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("期首在庫"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("仕入額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("原価額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在庫移動"), _
+        Function:=xlSum
+     .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売数"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫数"), _
+        Function:=xlSum
+End With
+End Sub
+Sub 会議年間表単品()
+Application.ScreenUpdating = False
+
+'Dim title As String
+'title = InputBox("表のタイトル", "表のタイトル", "")
+'Dim tukiKazu As Long
+'tukiKazu = InputBox("何カ月間か", "何カ月間か", "")
+'Dim KaitenSisuu As Double
+'KaitenSisuu = (1 / tukiKazu) * 12
+'Dim ptanB As Workbook
+'Set ptanB = Workbooks("単品.xls")
+'Dim i As Long
+'Dim myRange As Range
+Dim ptanB As Workbook
+Set ptanB = Workbooks("会議年間表単品.xlsx")
+Dim ptanpvt As PivotTable
+Dim ptansrc As Range
+Set ptansrc = ptanB.Sheets("Sheet1").Range("A1").CurrentRegion
+ptanB.Sheets.Add.Name = "ピボット"
+Set ptanpvt = _
+    ptanB.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=ptansrc). _
+            CreatePivotTable(tabledestination:=ptanB.Sheets("ピボット").Range("A1"))
+With ptanpvt
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売上額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("粗利額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("仕入額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在庫移動"), _
+        Function:=xlSum
+     .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫"), _
+        Function:=xlSum
+    .AddFields _
+        ColumnFields:=Array("番号店舗")
+    .DataPivotField.Orientation = xlRowField
+End With
+
+Dim ptanpvtB As PivotTable
+Dim ptansrcB As Range
+Set ptansrcB = ptanB.Sheets("Sheet1").Range("A1").CurrentRegion
+ptanB.Sheets.Add.Name = "ピボット部門別"
+Set ptanpvtB = _
+    ptanB.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=ptansrcB). _
+            CreatePivotTable(tabledestination:=ptanB.Sheets("ピボット部門別").Range("A1"))
+With ptanpvtB
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売上額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("粗利額"), _
+        Function:=xlSum
+     .AddDataField _
+        Field:=ptanpvt.PivotFields("売数"), _
+        Function:=xlSum
+    .AddFields _
+        RowFields:=Array("大分類"), _
+        ColumnFields:=Array("番号店舗")
+    .DataPivotField.Orientation = xlRowField
+End With
+
+With ptanB
+    .Sheets.Add.Name = "ピボット転記"
+    .Sheets("ピボット").Range("A2:L17").Copy
+    .Sheets("ピボット転記").Range("A1").PasteSpecial Paste:=xlPasteValues
+    .Sheets.Add.Name = "ピボット部門別転記"
+    .Sheets("ピボット部門別").Range("A2:L17").Copy
+    .Sheets("ピボット部門別転記").Range("A1").PasteSpecial Paste:=xlPasteValues
+    i = 0
+    For i = 3 To 10
+        .Sheets("ピボット部門別転記").Cells(17, i) = .Sheets("ピボット部門別転記").Cells(3, i) / .Sheets("ピボット部門別転記").Cells(2, i)
+        .Sheets("ピボット部門別転記").Cells(18, i) = .Sheets("ピボット部門別転記").Cells(2, i) / .Sheets("ピボット部門別転記").Cells(4, i)
+    Next
+        .Sheets("ピボット部門別転記").Cells(17, 1) = "車体利益率"
+        .Sheets("ピボット部門別転記").Cells(18, 1) = "車体単価"
+        .Sheets("ピボット部門別転記").Cells(19, 1) = "1年超"
+        .Sheets("ピボット部門別転記").Cells(20, 1) = "アクセス"
+        
+    i = 0
+    For i = 2 To 9
+        .Sheets("ピボット転記").Cells(7, i) = .Sheets("ピボット転記").Cells(4, i) - .Sheets("ピボット転記").Cells(5, i)
+    Next
+        .Sheets("ピボット転記").Cells(7, 1) = "正仕入額"
+End With
+
+End Sub
+Sub 会議年間表単品転載()
+Application.ScreenUpdating = False
+Dim GyouKazu As Long
+GyouKazu = InputBox("4月8　5月10　6月11", "4月8　5月10　6月11", "")
+Dim tenpoName As Variant
+tenpoName = Array("エバーレ", "上新庄", "吹田", "千里山", "千里", "伊丹", "本店", "全店")
+Dim KnTn As Worksheet
+Dim KnBumonTn As Worksheet
+Dim KnGn As Workbook
+Set KnTn = Workbooks("会議年間表単品.xlsx").Sheets("ピボット転記")
+Set KnBumonTn = Workbooks("会議年間表単品.xlsx").Sheets("ピボット部門別転記")
+Set KnGn = Workbooks("会議年間表.xlsx")
+i = 0
+
+For i = 0 To 7
+    With KnTn
+        .Cells(2, i + 2).Copy '売上
+        KnGn.Sheets(tenpoName(i)).Cells(20, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(3, i + 2).Copy '粗利
+        KnGn.Sheets(tenpoName(i)).Cells(23, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(7, i + 2).Copy '仕入
+        KnGn.Sheets(tenpoName(i)).Cells(27, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(6, i + 2).Copy '在庫
+        KnGn.Sheets(tenpoName(i)).Cells(28, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        KnGn.Sheets(tenpoName(i)).Cells(25, GyouKazu) = KnGn.Sheets(tenpoName(i)).Cells(15, GyouKazu) '計画の経費を入力
+        KnGn.Sheets(tenpoName(i)).Cells(26, GyouKazu) = KnGn.Sheets(tenpoName(i)).Cells(23, GyouKazu) - KnGn.Sheets(tenpoName(i)).Cells(25, GyouKazu)
+        '仮の経常利益
+    End With
+Next
+i = 0
+For i = 0 To 7
+    With KnBumonTn
+        .Cells(2, i + 3).Copy '車体売上
+        KnGn.Sheets(tenpoName(i)).Cells(39, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(4, i + 3).Copy  '車体販売数
+        KnGn.Sheets(tenpoName(i)).Cells(45, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(5, i + 3).Copy  '修理売上
+        KnGn.Sheets(tenpoName(i)).Cells(53, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(8, i + 3).Copy  '部品売上
+        KnGn.Sheets(tenpoName(i)).Cells(50, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(17, i + 3).Copy '車体利益率
+        KnGn.Sheets(tenpoName(i)).Cells(48, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(18, i + 3).Copy  '車体単価
+        KnGn.Sheets(tenpoName(i)).Cells(42, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(19, i + 3).Copy  '1年超
+        KnGn.Sheets(tenpoName(i)).Cells(34, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(20, i + 3).Copy  'アクセス
+        KnGn.Sheets(tenpoName(i)).Cells(56, GyouKazu).PasteSpecial Paste:=xlPasteValues
+    End With
+Next
+
+
+End Sub
+Sub 会議年間表会計()
+Application.ScreenUpdating = False
+Dim i As Integer
+With Workbooks("会議年間表会計.xlsx").Sheets("sheet4")
+    .Range("D1").Value = "項目区分"
+    For i = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet4").Columns("A"), .Cells(i, 1)) = 0 Then
+            .Cells(i, 4) = "13コピー外"
+        Else
+            .Cells(i, 4) = WorksheetFunction.VLookup(.Cells(i, 1), Workbooks("マスタ.xlsx").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+    i = 0
+    .Range("E1").Value = "店舗"
+    For i = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("会計店舗").Columns("A"), .Cells(i, 2)) = 0 Then
+            .Cells(i, 5) = ""
+        Else
+            .Cells(i, 5) = WorksheetFunction.VLookup(.Cells(i, 2), Workbooks("マスタ.xlsx").Sheets("会計店舗").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+End With
+
+Dim pvt As PivotTable
+Dim src As Range
+
+Set src = Workbooks("会議年間表会計.xlsx").Sheets("sheet4").Range("A1").CurrentRegion
+Workbooks("会議年間表会計.xlsx").Sheets.Add.Name = "ピボット"
+
+Set pvt = _
+    Workbooks("会議年間表会計.xlsx").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Workbooks("会議年間表会計.xlsx").Sheets("ピボット").Range("A1"))
+
+
+With pvt
+    .AddFields RowFields:=Array("項目区分"), ColumnFields:=Array("店舗")
+    .AddDataField _
+        Field:=pvt.PivotFields("値"), _
+        Function:=xlSum
+End With
+
+With Workbooks("会議年間表会計.xlsx")
+    .Sheets.Add.Name = "転記"
+    .Sheets("ピボット").Range("A2:L17").Copy
+    .Sheets("転記").Range("A1").PasteSpecial Paste:=xlPasteValues
+    .Sheets("転記").Columns("I:J").Delete
+End With
+
+Dim GyouKazu As Long
+GyouKazu = InputBox("4月8　5月10　6月11", "4月8　5月10　6月11", "")
+Dim tenpoName As Variant
+tenpoName = Array("エバーレ", "上新庄", "吹田", "千里山", "千里", "伊丹", "本店", "全店")
+Dim KnTn As Worksheet
+Dim KnGn As Workbook
+Set KnTn = Workbooks("会議年間表会計.xlsx").Sheets("転記")
+Set KnGn = Workbooks("会議年間表.xlsx")
+i = 0
+
+For i = 0 To 7
+    With KnTn
+        .Cells(2, i + 2).Copy
+        KnGn.Sheets(tenpoName(i)).Cells(20, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(3, i + 2).Copy
+        KnGn.Sheets(tenpoName(i)).Cells(23, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        .Cells(10, i + 2).Copy
+        KnGn.Sheets(tenpoName(i)).Cells(26, GyouKazu).PasteSpecial Paste:=xlPasteValues
+        KnGn.Sheets(tenpoName(i)).Cells(25, GyouKazu) = KnGn.Sheets(tenpoName(i)).Cells(23, GyouKazu) - KnGn.Sheets(tenpoName(i)).Cells(26, GyouKazu)
+        '仮の経常利益
+    End With
+Next
+'Dim tenpoName As Variant
+'tenpoName = Array("エバーレ", "上新庄", "吹田", "千里山", "千里", "伊丹", "本店", "全店")
+
+'For z = 0 To 7
+'With KnTn
+'    .Range("B2").Copy
+'    KnGn.Sheets("エバーレ").Range("C20").PasteSpecial Paste:=xlPasteValues
+'    .Range("B3").Copy
+'    KnGn.Sheets("エバーレ").Range("C23").PasteSpecial Paste:=xlPasteValues
+'    .Range("B10").Copy
+'    KnGn.Sheets("エバーレ").Range("C26").PasteSpecial Paste:=xlPasteValues
+'End With
+'Next
+
+End Sub
+Sub 会計損益1()
+
+Application.ScreenUpdating = False
+
+Dim ksonr As Integer
+With Workbooks("損益.xlsx").Sheets("累計")
+    .Range("D1").Value = "期間区分"
+    For ksonr = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ksonr, 4) = "累計"
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet3").Columns("A"), .Cells(ksonr, 1)) = 0 Then
+            .Cells(ksonr, 3).Value = .Cells(ksonr, 3).Value
+        Else
+            .Cells(ksonr, 3).Value = .Cells(ksonr, 3).Value * -1
+        End If
+    Next
+End With
+
+Dim ksont As Integer
+With Workbooks("損益.xlsx").Sheets("単月")
+    .Range("D1").Value = "期間区分"
+    For ksont = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ksont, 4) = "単月"
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet3").Columns("A"), .Cells(ksont, 1)) = 0 Then
+            .Cells(ksont, 3).Value = .Cells(ksont, 3).Value
+        Else
+            .Cells(ksont, 3).Value = .Cells(ksont, 3).Value * -1
+        End If
+    Next
+End With
+
+Workbooks("損益.xlsx").Sheets("単月").Rows("1").Delete
+Workbooks("損益.xlsx").Sheets("単月").Range("A1").CurrentRegion.Copy Workbooks("損益.xlsx").Sheets("累計").Cells(Rows.Count, 1).End(xlUp).Offset(1, 0)
+
+
+Dim ksonb As Integer
+With Workbooks("損益.xlsx").Sheets("累計")
+    .Range("E1").Value = "項目区分"
+    For ksonb = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet4").Columns("A"), .Cells(ksonb, 1)) = 0 Then
+            .Cells(ksonb, 5) = "13コピー外"
+        Else
+            .Cells(ksonb, 5) = WorksheetFunction.VLookup(.Cells(ksonb, 1), Workbooks("マスタ.xlsx").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+End With
+
+
+Dim ksonm As Integer
+With Workbooks("損益.xlsx").Sheets("累計")
+    .Range("F1").Value = "店舗"
+    For ksonm = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("会計店舗").Columns("A"), .Cells(ksonm, 2)) = 0 Then
+            .Cells(ksonm, 6) = ""
+        Else
+            .Cells(ksonm, 6) = WorksheetFunction.VLookup(.Cells(ksonm, 2), Workbooks("マスタ.xlsx").Sheets("会計店舗").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+End With
+
+Dim pvt As PivotTable
+Dim src As Range
+Set src = Workbooks("損益.xlsx").Sheets("累計").Range("A1").CurrentRegion
+Workbooks("損益.xlsx").Sheets.Add.Name = "ピボット"
+
+Set pvt = _
+    Workbooks("損益.xlsx").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Workbooks("損益.xlsx").Sheets("ピボット").Range("A1"))
+
+
+With pvt
+    .AddFields RowFields:=Array("項目区分"), ColumnFields:=Array("店舗"), PageFields:=Array("期間区分")
+    .AddDataField _
+        Field:=pvt.PivotFields("値"), _
+        Function:=xlSum
+    .PivotFields("期間区分").CurrentPage = "単月"
+End With
+Workbooks("損益.xlsx").Sheets.Add.Name = "転記単月"
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("転記単月").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Workbooks("損益.xlsx").Sheets.Add.Name = "増田単月"
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("増田単月").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+
+pvt.PivotFields("期間区分").CurrentPage = "累計"
+Workbooks("損益.xlsx").Sheets.Add.Name = "転記累計"
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("転記累計").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Workbooks("損益.xlsx").Sheets.Add.Name = "増田累計"
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("増田累計").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Workbooks("損益.xlsx").Sheets("転記累計").Range("N1") = 1000
+Workbooks("損益.xlsx").Sheets("転記累計").Range("N1").Copy
+Workbooks("損益.xlsx").Sheets("転記累計").Range("B2:L14").PasteSpecial Operation:=xlPasteSpecialOperationDivide
+Workbooks("損益.xlsx").Sheets("転記単月").Range("B2:L14").PasteSpecial Operation:=xlPasteSpecialOperationDivide
+
+Workbooks("損益.xlsx").Sheets("増田累計").Columns("I").Delete
+Workbooks("損益.xlsx").Sheets("増田単月").Columns("I").Delete
+
+End Sub
+
+Sub 会計損益転記()
+Application.ScreenUpdating = False
+Dim ksontn1 As Worksheet
+Dim ksontn2 As Worksheet
+Dim ksontn3 As Worksheet
+Dim ksontn4 As Worksheet
+Set ksontn1 = Workbooks("損益.xlsx").Sheets("転記単月")
+Set ksontn2 = Workbooks("損益.xlsx").Sheets("転記累計")
+Set ksontn3 = Workbooks("売上利益表.xlsx").Sheets("単月")
+Set ksontn4 = Workbooks("売上利益表.xlsx").Sheets("累計")
+
+With ksontn1
+    .Range("B2:J2").Copy
+    ksontn3.Range("C5").PasteSpecial Paste:=xlPasteValues
+    .Range("B3:J3").Copy
+    ksontn3.Range("C8").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn3.Range("C15").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn3.Range("C18").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn3.Range("C21").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn3.Range("C24").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn3.Range("C27").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn3.Range("C30").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C33").PasteSpecial Paste:=xlPasteValues
+End With
+
+With ksontn2
+    .Range("B2:J2").Copy
+    ksontn4.Range("C5").PasteSpecial Paste:=xlPasteValues
+    .Range("B3:J3").Copy
+    ksontn4.Range("C8").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn4.Range("C15").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn4.Range("C18").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn4.Range("C21").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn4.Range("C24").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn4.Range("C27").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn4.Range("C30").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn4.Range("C33").PasteSpecial Paste:=xlPasteValues
+End With
+
+End Sub
+
+Sub 会計損益前年転記()
+Application.ScreenUpdating = False
+Dim ksonzn1 As Worksheet
+Dim ksonzn2 As Worksheet
+Dim ksonzn3 As Worksheet
+Dim ksonzn4 As Worksheet
+Set ksonzn1 = Workbooks("前売上利益表.xlsx").Sheets("単月")
+Set ksonzn2 = Workbooks("前売上利益表.xlsx").Sheets("累計")
+Set ksonzn3 = Workbooks("売上利益表.xlsx").Sheets("単月")
+Set ksonzn4 = Workbooks("売上利益表.xlsx").Sheets("累計")
+
+With ksonzn1
+    .Range("C5:K5").Copy
+    ksonzn3.Range("C6").PasteSpecial Paste:=xlPasteValues
+    .Range("C8:K8").Copy
+    ksonzn3.Range("C9").PasteSpecial Paste:=xlPasteValues
+    .Range("C14:K14").Copy
+    ksonzn3.Range("C16").PasteSpecial Paste:=xlPasteValues
+    .Range("C17:K17").Copy
+    ksonzn3.Range("C19").PasteSpecial Paste:=xlPasteValues
+    .Range("C20:K20").Copy
+    ksonzn3.Range("C22").PasteSpecial Paste:=xlPasteValues
+    .Range("C23:K23").Copy
+    ksonzn3.Range("C25").PasteSpecial Paste:=xlPasteValues
+    .Range("C26:K26").Copy
+    ksonzn3.Range("C28").PasteSpecial Paste:=xlPasteValues
+    .Range("C29:K29").Copy
+    ksonzn3.Range("C31").PasteSpecial Paste:=xlPasteValues
+    .Range("C32:K32").Copy
+    ksonzn3.Range("C34").PasteSpecial Paste:=xlPasteValues
+End With
+
+With ksonzn2
+    .Range("C5:K5").Copy
+    ksonzn4.Range("C6").PasteSpecial Paste:=xlPasteValues
+    .Range("C8:K8").Copy
+    ksonzn4.Range("C9").PasteSpecial Paste:=xlPasteValues
+    .Range("C14:K14").Copy
+    ksonzn4.Range("C16").PasteSpecial Paste:=xlPasteValues
+    .Range("C17:K17").Copy
+    ksonzn4.Range("C19").PasteSpecial Paste:=xlPasteValues
+    .Range("C20:K20").Copy
+    ksonzn4.Range("C22").PasteSpecial Paste:=xlPasteValues
+    .Range("C23:K23").Copy
+    ksonzn4.Range("C25").PasteSpecial Paste:=xlPasteValues
+    .Range("C26:K26").Copy
+    ksonzn4.Range("C28").PasteSpecial Paste:=xlPasteValues
+    .Range("C29:K29").Copy
+    ksonzn4.Range("C31").PasteSpecial Paste:=xlPasteValues
+    .Range("C32:K32").Copy
+    ksonzn4.Range("C34").PasteSpecial Paste:=xlPasteValues
+End With
+
+
+End Sub
+
+
+Sub 会計損益増田転記()
+Application.ScreenUpdating = False
+Dim ksonms1 As Worksheet
+Dim ksonms2 As Worksheet
+Dim ksonms3 As Worksheet
+Set ksonms1 = Workbooks("損益.xlsx").Sheets("増田単月")
+Set ksonms2 = Workbooks("損益.xlsx").Sheets("増田累計")
+Set ksonms3 = Workbooks("増田.xlsx").Sheets("sheet1")
+
+With ksonms3
+    .Range("C5:J5").Value = ksonms1.Range("B2:I2").Value
+    .Range("C6:J6").Value = ksonms2.Range("B2:I2").Value
+    .Range("C9:J9").Value = ksonms1.Range("B3:I3").Value
+    .Range("C10:J10").Value = ksonms2.Range("B3:I3").Value
+    .Range("C14:J14").Value = ksonms1.Range("B10:I10").Value
+    .Range("C15:J15").Value = ksonms2.Range("B10:I10").Value
+    .Range("C17:J17").Value = ksonms1.Range("B12:I12").Value
+    .Range("C18:J18").Value = ksonms1.Range("B11:I11").Value
+    .Range("C19:J19").Value = ksonms2.Range("B11:I11").Value
+End With
+End Sub
+
+Sub 貸借対照表転記準備()
+Dim ktait1 As Worksheet
+Dim ktait2 As Worksheet
+Set ktait1 = Workbooks("転記元貸借.xlsx").Sheets("sheet2")
+Set ktait2 = Workbooks("転記先貸借.xlsx").Sheets("sheet1")
+
+
+Dim ktait3 As Integer
+With ktait1
+    For ktait3 = 3 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ktait3, 2) = WorksheetFunction.VLookup(.Cells(ktait3, 1), Workbooks("転記元貸借.xlsx").Sheets("sheet1").Range("A1").CurrentRegion, 2, False)
+    Next
+    .Range("B2").Value = .Range("B3").Value + .Range("B4").Value + .Range("B5").Value
+End With
+
+
+With ktait2
+    .Range("Q7").Value = ktait1.Range("B18").Value / 1000
+    .Range("Q8").Value = ktait1.Range("B19").Value / 1000
+    .Range("Q10").Value = ktait1.Range("B14").Value / 1000
+    .Range("Q15").Value = ktait1.Range("B17").Value / 1000
+    .Range("Q19").Value = ktait1.Range("B16").Value / 1000
+    .Range("Q22").Value = ktait1.Range("B15").Value / 1000
+    .Range("N10").Value = ktait1.Range("B8").Value / 1000
+    .Range("N13").Value = ktait1.Range("B10").Value / 1000
+    .Range("N17").Value = ktait1.Range("B12").Value / 1000
+    .Range("N22").Value = (ktait1.Range("B11").Value + ktait1.Range("B9").Value) / 1000
+    .Range("N23").Value = ktait1.Range("B6").Value / 1000
+End With
+End Sub
+
+Sub 専務車体台数()
+Application.ScreenUpdating = False
+
+Dim puri As Workbook
+Set puri = Workbooks("売上.xls")
+Dim SenmuUri As Long
+
+With puri.Sheets("sheet1")
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 7).End(xlUp).EntireRow.Delete
+    .Range("L1").Value = "本店項目"
+    For SenmuUri = 2 To .Cells(Rows.Count, 7).End(xlUp).Row
+        If .Cells(SenmuUri, 20) = "電動自転車" Then
+            .Cells(SenmuUri, 3) = "電動自転車"
+        End If
+        
+        If .Cells(SenmuUri, 20) = "電動自転車" Then
+            .Cells(SenmuUri, 3) = "電動自転車"
+        End If
+        
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("専務").Range("A1:A5"), .Cells(SenmuUri, 20)) <> 0 Then
+            .Cells(SenmuUri, 12) = "スポーツ車"
+        ElseIf .Cells(SenmuUri, 20) = "電動自転車" Then
+            .Cells(SenmuUri, 12) = "電動自転車"
+        ElseIf WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("専務").Range("A7:A8"), .Cells(SenmuUri, 20)) <> 0 _
+                And .Cells(SenmuUri, 4) = "中古車" Then
+            .Cells(SenmuUri, 12) = "中古車"
+        ElseIf WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("専務").Range("A7:A8"), .Cells(SenmuUri, 20)) <> 0 _
+                And .Cells(SenmuUri, 4) = "8X" Then
+            .Cells(SenmuUri, 12) = "8X"
+        ElseIf .Cells(SenmuUri, 20) = "ﾌｧﾐﾘｰｻｲｸﾙ" Then
+            .Cells(SenmuUri, 12) = "クークル"
+        ElseIf .Cells(SenmuUri, 20) = "防犯登録のみ" Then
+            .Cells(SenmuUri, 12).EntireRow.Delete
+        Else
+            .Cells(SenmuUri, 12) = "一般車"
+        End If
+    Next
+End With
+
+Dim pvt As PivotTable
+Dim src As Range
+Set src = puri.Sheets("sheet1").Range("A1").CurrentRegion
+puri.Sheets.Add
+Set pvt = _
+    puri.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=puri.Sheets("sheet2").Range("A1"))
+
+  ' フィールドの配置
+With pvt
+    .AddFields RowFields:=Array("ブランド名"), ColumnFields:=Array("店舗名"), PageFields:=Array("大分類名")
+    .AddDataField _
+        Field:=pvt.PivotFields("販売数"), _
+        Function:=xlSum
+    .PivotFields("大分類名").CurrentPage = "車体"
+End With
+
+Dim pvtSenmu As PivotTable
+Dim srcSenmu As Range
+Set srcSenmu = puri.Sheets("sheet1").Range("A1").CurrentRegion
+puri.Sheets.Add
+Set pvtSenmu = _
+    puri.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=srcSenmu). _
+            CreatePivotTable(tabledestination:=puri.Sheets("sheet3").Range("A1"))
+
+  ' フィールドの配置
+With pvtSenmu
+    .AddFields RowFields:=Array("本店項目"), PageFields:=Array("大分類名", "店舗名")
+    .AddDataField _
+        Field:=pvt.PivotFields("販売数"), _
+        Function:=xlSum
+    .PivotFields("大分類名").CurrentPage = "車体"
+    .PivotFields("店舗名").CurrentPage = "本店"
+End With
+
+
+With puri
+.Sheets.Add
+.Sheets("sheet2").Range("A3").CurrentRegion.Copy
+.Sheets("Sheet4").Range("A3").PasteSpecial Paste:=xlPasteValues
+.Sheets("Sheet4").Range("A2").Value = "ブランド別売上"
+.Sheets("Sheet4").Range("A3").CurrentRegion.Borders.LineStyle = xlDash
+.Sheets("Sheet4").Range("A3").CurrentRegion.Borders.Weight = xlHairline
+.Sheets("Sheet4").Columns("A").EntireColumn.AutoFit
+.Sheets("Sheet4").PageSetup.TopMargin = 0.35
+.Sheets("Sheet4").PageSetup.BottomMargin = 0.16
+
+End With
+
+End Sub
+Sub 専務在庫表()
+Application.ScreenUpdating = False
+Dim ShopName As Variant
+ShopName = Array("ｴﾊﾞｰﾚ店", "上新庄店", "吹田店", "阪急千里山店", "千里店", "伊丹店", "本店")
+Set zaikoSheet = Workbooks("在庫.xls").Sheets("sheet1")
+Set ZaikoBook = Workbooks("在庫.xls")
+Dim pvt As PivotTable
+Dim src As Range
+Dim ZaikoDay As String
+ZaikoDay = InputBox("何月何日の在庫か", "何月何日の在庫か", "")
+With zaikoSheet
+    .Rows("1:2").Delete
+    .Cells(65536, 7).End(xlUp).EntireRow.Delete
+    Dim i As Long
+    i = 0
+    For i = Cells(65536, 4).End(xlUp).Row To 2 Step -1 '車体以外を削除。下から消す
+    If Cells(i, 18).Value <> "車体" Then
+        Cells(i, 18).EntireRow.Delete
+    End If
+    Next
+    For ptani1 = 2 To .Cells(Rows.Count, 1).End(xlUp).Row  '区分の追加
+        If .Cells(ptani1, 8) = 0 Then
+            .Cells(ptani1, 26) = 0
+        Else
+            .Cells(ptani1, 26) = .Cells(ptani1, 11).Value / .Cells(ptani1, 8).Value
+        End If
+        If (.Cells(ptani1, 26) > 0.55 Or .Cells(ptani1, 26) < 0.02) And .Cells(ptani1, 2) = 2018 Then
+            .Cells(ptani1, 27) = "18プロパー"
+        ElseIf (.Cells(ptani1, 26) > 0.55 Or .Cells(ptani1, 26) < 0.02) And .Cells(ptani1, 2) <> 2018 Then
+            .Cells(ptani1, 27) = "17プロパー"
+        Else
+            .Cells(ptani1, 27) = "特価"
+        End If
+    Next
+End With
+
+For z = 0 To 6
+Set src = Nothing
+Set pvt = Nothing
+Proper18 = 0
+Proper17 = 0
+Tokka = 0
+Goukei = 0
+Set src = Workbooks("在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion
+Workbooks("在庫.xls").Sheets.Add.Name = "ﾋﾟﾎﾞｯﾄ" & ShopName(z)
+Set pvt = _
+    Workbooks("在庫.xls").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Workbooks("在庫.xls").Sheets("ﾋﾟﾎﾞｯﾄ" & ShopName(z)).Range("A1"))
+
+With pvt
+    .AddFields RowFields:=Array("ブランド"), PageFields:=Array("備考2", "店舗名")
+    .AddDataField _
+        Field:=pvt.PivotFields("原価金額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=pvt.PivotFields("在庫数"), _
+        Function:=xlSum
+    .PivotFields("備考2").CurrentPage = "17プロパー"
+    .PivotFields("店舗名").CurrentPage = ShopName(z)
+    .DataPivotField.Orientation = xlColumnField
+    .PivotFields("ブランド").AutoSort _
+        xlDescending, "合計 / 原価金額"
+End With
+
+With ZaikoBook
+    .Sheets.Add.Name = ShopName(z)
+    .Sheets("ﾋﾟﾎﾞｯﾄ" & ShopName(z)).Range("A4").CurrentRegion.Copy
+    .Sheets(ShopName(z)).Range("A3").PasteSpecial Paste:=xlPasteValues
+    i = 0
+    With .Sheets(ShopName(z))
+        For i = 5 To .Cells(65536, 2).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 4).Value = .Cells(i, 2).Value / .Cells(.Cells(65536, 2).End(xlUp).Row, 2).Value
+        Next
+    Proper17 = .Cells(65536, 2).End(xlUp).Row ' 最終行を取得して変数にいれる
+    End With
+    
+    
+
+    pvt.PivotFields("備考2").CurrentPage = "18プロパー"
+
+    .Sheets("ﾋﾟﾎﾞｯﾄ" & ShopName(z)).Range("A4").CurrentRegion.Copy
+    .Sheets(ShopName(z)).Range("F3").PasteSpecial Paste:=xlPasteValues
+    i = 0
+    With .Sheets(ShopName(z))
+        For i = 5 To .Cells(65536, 7).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 9).Value = .Cells(i, 7).Value / .Cells(.Cells(65536, 7).End(xlUp).Row, 7).Value
+        Next
+    End With
+
+    With .Sheets(ShopName(z))
+        If .Cells(65536, 3).End(xlUp).Row >= .Cells(65536, 7).End(xlUp).Row Then
+            LastRow = .Cells(65536, 3).End(xlUp).Row
+        Else
+            LastRow = .Cells(65536, 7).End(xlUp).Row
+        End If
+    Proper18 = .Cells(65536, 7).End(xlUp).Row ' 最終行を取得して変数にいれる
+    End With
+        
+    pvt.PivotFields("備考2").CurrentPage = "特価"
+
+    .Sheets("ﾋﾟﾎﾞｯﾄ" & ShopName(z)).Range("A4").CurrentRegion.Copy
+    .Sheets(ShopName(z)).Cells(LastRow + 2, 1).PasteSpecial Paste:=xlPasteValues
+    i = 0
+    With .Sheets(ShopName(z))
+        For i = LastRow + 4 To .Cells(65536, 2).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 4).Value = .Cells(i, 2).Value / .Cells(.Cells(65536, 2).End(xlUp).Row, 2).Value
+        Next
+    Tokka = .Cells(65536, 2).End(xlUp).Row  ' 最終行を取得して変数にいれる
+    End With
+    
+    
+     
+
+    pvt.PivotFields("備考2").CurrentPage = "(all)"
+
+    .Sheets("ﾋﾟﾎﾞｯﾄ" & ShopName(z)).Range("A4").CurrentRegion.Copy
+    .Sheets(ShopName(z)).Cells(LastRow + 2, 6).PasteSpecial Paste:=xlPasteValues
+    
+    Goukei = .Sheets(ShopName(z)).Cells(65536, 7).End(xlUp).Row ' 最終行を取得して変数にいれる
+    
+    i = 0
+    With .Sheets(ShopName(z))
+        For i = LastRow + 4 To .Cells(65536, 7).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 9).Value = .Cells(i, 7).Value / .Cells(.Cells(65536, 7).End(xlUp).Row, 7).Value
+        Next
+        .Range("B3").ClearContents
+        .Range("G3").ClearContents
+        .Cells(LastRow + 2, 2).ClearContents
+        .Cells(LastRow + 2, 7).ClearContents
+        .Columns("D").NumberFormatLocal = "0.0%"
+        .Columns("I").NumberFormatLocal = "0.0%"
+        .Columns("B").NumberFormatLocal = "#,##0"
+        .Columns("G").NumberFormatLocal = "#,##0"
+        .Range("A4").CurrentRegion.Borders.LineStyle = xlDash
+        .Range("A4").CurrentRegion.Borders.Weight = xlHairline
+        .Range("F4").CurrentRegion.Borders.LineStyle = xlDash
+        .Range("F4").CurrentRegion.Borders.Weight = xlHairline
+        .Cells(LastRow + 3, 2).CurrentRegion.Borders.LineStyle = xlDash
+        .Cells(LastRow + 3, 2).CurrentRegion.Borders.Weight = xlHairline
+        .Cells(LastRow + 3, 7).CurrentRegion.Borders.LineStyle = xlDash
+        .Cells(LastRow + 3, 7).CurrentRegion.Borders.Weight = xlHairline
+        .Range("A3").Value = "17プロパー"
+        .Range("A3").Font.Bold = True
+        .Range("F3").Value = "18プロパー"
+        .Range("F3").Font.Bold = True
+        .Cells(LastRow + 2, 1).Value = "特価"
+        .Cells(LastRow + 2, 1).Font.Bold = True
+        .Cells(LastRow + 2, 6).Value = "合計"
+        .Cells(LastRow + 2, 6).Font.Bold = True
+        .Range("B4").Value = "在庫額"
+        .Range("C4").Value = "台数"
+        .Range("D4").Value = "構成比"
+        .Range("G4").Value = "在庫額"
+        .Range("H4").Value = "台数"
+        .Range("I4").Value = "構成比"
+        .Cells(LastRow + 3, 2).Value = "在庫額"
+        .Cells(LastRow + 3, 3).Value = "台数"
+        .Cells(LastRow + 3, 4).Value = "構成比"
+        .Cells(LastRow + 3, 7).Value = "在庫額"
+        .Cells(LastRow + 3, 8).Value = "台数"
+        .Cells(LastRow + 3, 9).Value = "構成比"
+        .Columns("A:I").Font.Size = 11.5
+        .Range("A1").Font.Size = 14
+        .Columns("A:I").EntireColumn.AutoFit
+        .Range("A1").Value = ShopName(z) & "区分別在庫"
+        .Range("f1").Value = ZaikoDay
+        .Cells(Proper17, 4) = .Cells(Proper17, 2) / .Cells(Goukei, 7) '17プロパーの構成比を計算
+        .Cells(Proper17, 4).Font.Bold = True
+        .Cells(Proper18, 9) = .Cells(Proper18, 7) / .Cells(Goukei, 7) '18プロパーの構成比を計算
+        .Cells(Proper18, 9).Font.Bold = True
+        .Cells(Tokka, 4) = .Cells(Tokka, 2) / .Cells(Goukei, 7) '特価の構成比を計算
+        .Cells(Tokka, 4).Font.Bold = True
+        .ExportAsFixedFormat Type:=xlTypePDF, Filename:="d:\abc\itizi\" & ShopName(z) & ".pdf"
+    End With
+End With
+Next
+
+'''''''''''
+
+Set src = Nothing
+Set pvt = Nothing
+Proper18 = 0
+Proper17 = 0
+Tokka = 0
+Goukei = 0
+Set src = Workbooks("在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion
+Workbooks("在庫.xls").Sheets.Add.Name = "ﾋﾟﾎﾞｯﾄ全店"
+Set pvt = _
+    Workbooks("在庫.xls").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Workbooks("在庫.xls").Sheets("ﾋﾟﾎﾞｯﾄ全店").Range("A1"))
+
+With pvt
+    .AddFields RowFields:=Array("ブランド"), PageFields:=Array("備考2", "店舗名")
+    .AddDataField _
+        Field:=pvt.PivotFields("原価金額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=pvt.PivotFields("在庫数"), _
+        Function:=xlSum
+    .PivotFields("備考2").CurrentPage = "17プロパー"
+    .DataPivotField.Orientation = xlColumnField
+    .PivotFields("ブランド").AutoSort _
+        xlDescending, "合計 / 原価金額"
+End With
+
+With ZaikoBook
+    .Sheets.Add.Name = "全店"
+    .Sheets("ﾋﾟﾎﾞｯﾄ全店").Range("A4").CurrentRegion.Copy
+    .Sheets("全店").Range("A3").PasteSpecial Paste:=xlPasteValues
+    i = 0
+    With .Sheets("全店")
+        For i = 5 To .Cells(65536, 2).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 4).Value = .Cells(i, 2).Value / .Cells(.Cells(65536, 2).End(xlUp).Row, 2).Value
+        Next
+    Proper17 = .Cells(65536, 2).End(xlUp).Row ' 最終行を取得して変数にいれる
+    End With
+    
+    
+
+    pvt.PivotFields("備考2").CurrentPage = "18プロパー"
+
+    .Sheets("ﾋﾟﾎﾞｯﾄ全店").Range("A4").CurrentRegion.Copy
+    .Sheets("全店").Range("F3").PasteSpecial Paste:=xlPasteValues
+    i = 0
+    With .Sheets("全店")
+        For i = 5 To .Cells(65536, 7).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 9).Value = .Cells(i, 7).Value / .Cells(.Cells(65536, 7).End(xlUp).Row, 7).Value
+        Next
+    End With
+
+    With .Sheets("全店")
+        If .Cells(65536, 3).End(xlUp).Row >= .Cells(65536, 7).End(xlUp).Row Then
+            LastRow = .Cells(65536, 3).End(xlUp).Row
+        Else
+            LastRow = .Cells(65536, 7).End(xlUp).Row
+        End If
+    Proper18 = .Cells(65536, 7).End(xlUp).Row ' 最終行を取得して変数にいれる
+    End With
+        
+    pvt.PivotFields("備考2").CurrentPage = "特価"
+
+    .Sheets("ﾋﾟﾎﾞｯﾄ全店").Range("A4").CurrentRegion.Copy
+    .Sheets("全店").Cells(LastRow + 2, 1).PasteSpecial Paste:=xlPasteValues
+    i = 0
+    With .Sheets("全店")
+        For i = LastRow + 4 To .Cells(65536, 2).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 4).Value = .Cells(i, 2).Value / .Cells(.Cells(65536, 2).End(xlUp).Row, 2).Value
+        Next
+    Tokka = .Cells(65536, 2).End(xlUp).Row  ' 最終行を取得して変数にいれる
+    End With
+    
+    
+     
+
+    pvt.PivotFields("備考2").CurrentPage = "(all)"
+
+    .Sheets("ﾋﾟﾎﾞｯﾄ全店").Range("A4").CurrentRegion.Copy
+    .Sheets("全店").Cells(LastRow + 2, 6).PasteSpecial Paste:=xlPasteValues
+    
+    Goukei = .Sheets("全店").Cells(65536, 7).End(xlUp).Row ' 最終行を取得して変数にいれる
+    
+    i = 0
+    With .Sheets("全店")
+        For i = LastRow + 4 To .Cells(65536, 7).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 9).Value = .Cells(i, 7).Value / .Cells(.Cells(65536, 7).End(xlUp).Row, 7).Value
+        Next
+        .Range("B3").ClearContents
+        .Range("G3").ClearContents
+        .Cells(LastRow + 2, 2).ClearContents
+        .Cells(LastRow + 2, 7).ClearContents
+        .Columns("D").NumberFormatLocal = "0.0%"
+        .Columns("I").NumberFormatLocal = "0.0%"
+        .Columns("B").NumberFormatLocal = "#,##0"
+        .Columns("G").NumberFormatLocal = "#,##0"
+        .Range("A4").CurrentRegion.Borders.LineStyle = xlDash
+        .Range("A4").CurrentRegion.Borders.Weight = xlHairline
+        .Range("F4").CurrentRegion.Borders.LineStyle = xlDash
+        .Range("F4").CurrentRegion.Borders.Weight = xlHairline
+        .Cells(LastRow + 3, 2).CurrentRegion.Borders.LineStyle = xlDash
+        .Cells(LastRow + 3, 2).CurrentRegion.Borders.Weight = xlHairline
+        .Cells(LastRow + 3, 7).CurrentRegion.Borders.LineStyle = xlDash
+        .Cells(LastRow + 3, 7).CurrentRegion.Borders.Weight = xlHairline
+        .Range("A3").Value = "17プロパー"
+        .Range("A3").Font.Bold = True
+        .Range("F3").Value = "18プロパー"
+        .Range("F3").Font.Bold = True
+        .Cells(LastRow + 2, 1).Value = "特価"
+        .Cells(LastRow + 2, 1).Font.Bold = True
+        .Cells(LastRow + 2, 6).Value = "合計"
+        .Cells(LastRow + 2, 6).Font.Bold = True
+        .Range("B4").Value = "在庫額"
+        .Range("C4").Value = "台数"
+        .Range("D4").Value = "構成比"
+        .Range("G4").Value = "在庫額"
+        .Range("H4").Value = "台数"
+        .Range("I4").Value = "構成比"
+        .Cells(LastRow + 3, 2).Value = "在庫額"
+        .Cells(LastRow + 3, 3).Value = "台数"
+        .Cells(LastRow + 3, 4).Value = "構成比"
+        .Cells(LastRow + 3, 7).Value = "在庫額"
+        .Cells(LastRow + 3, 8).Value = "台数"
+        .Cells(LastRow + 3, 9).Value = "構成比"
+        .Columns("A:I").Font.Size = 11.5
+        .Range("A1").Font.Size = 14
+        .Columns("A:I").EntireColumn.AutoFit
+        .Range("A1").Value = "全店区分別在庫"
+        .Range("f1").Value = ZaikoDay
+        .Cells(Proper17, 4) = .Cells(Proper17, 2) / .Cells(Goukei, 7) '17プロパーの構成比を計算
+        .Cells(Proper17, 4).Font.Bold = True
+        .Cells(Proper18, 9) = .Cells(Proper18, 7) / .Cells(Goukei, 7) '18プロパーの構成比を計算
+        .Cells(Proper18, 9).Font.Bold = True
+        .Cells(Tokka, 4) = .Cells(Tokka, 2) / .Cells(Goukei, 7) '特価の構成比を計算
+        .Cells(Tokka, 4).Font.Bold = True
+    End With
+End With
+
+
+
+End Sub
+
