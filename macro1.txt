@@ -1,3 +1,231 @@
+Sub 会計損益変動費転記()
+Application.ScreenUpdating = False
+
+Dim ksontn1 As Worksheet
+Dim ksontn2 As Worksheet
+Dim ksontn3 As Worksheet
+Set ksontn1 = Workbooks("損益.xlsx").Sheets("転記累計")
+Set ksontn2 = Workbooks("損益.xlsx").Sheets("転記前累計")
+Set ksontn3 = Workbooks("変動損益計算書.xlsx").Sheets("累計")
+
+
+With ksontn1
+    .Range("B2:J2").Copy
+    ksontn3.Range("C5").PasteSpecial Paste:=xlPasteValues
+    .Range("B15:J15").Copy
+    ksontn3.Range("C12").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn3.Range("C16").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn3.Range("C28").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn3.Range("C31").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn3.Range("C37").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn3.Range("C40").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn3.Range("C43").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C46").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn3.Range("C34").PasteSpecial Paste:=xlPasteValues
+  End With
+  
+With ksontn2
+    .Range("B2:J2").Copy
+    ksontn3.Range("C6").PasteSpecial Paste:=xlPasteValues
+    .Range("B15:J15").Copy
+    ksontn3.Range("C13").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn3.Range("C17").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn3.Range("C29").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn3.Range("C32").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn3.Range("C38").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn3.Range("C41").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn3.Range("C44").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C47").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn3.Range("C35").PasteSpecial Paste:=xlPasteValues
+  End With
+
+End Sub
+
+
+
+Sub 会計損益前年転記()
+Application.ScreenUpdating = False
+Dim ksontn1 As Worksheet
+Dim ksontn2 As Worksheet
+Dim ksontn3 As Worksheet
+Dim ksontn4 As Worksheet
+Set ksontn1 = Workbooks("損益.xlsx").Sheets("転記前単月")
+Set ksontn2 = Workbooks("損益.xlsx").Sheets("転記前累計")
+Set ksontn3 = Workbooks("売上利益表.xlsx").Sheets("単月")
+Set ksontn4 = Workbooks("売上利益表.xlsx").Sheets("累計")
+
+With ksontn1
+    .Range("B2:J2").Copy
+    ksontn3.Range("C6").PasteSpecial Paste:=xlPasteValues
+    .Range("B3:J3").Copy
+    ksontn3.Range("C9").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn3.Range("C16").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn3.Range("C19").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn3.Range("C25").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn3.Range("C28").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn3.Range("C31").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn3.Range("C34").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C37").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn3.Range("C22").PasteSpecial Paste:=xlPasteValues
+End With
+
+With ksontn2
+    .Range("B2:J2").Copy
+    ksontn4.Range("C6").PasteSpecial Paste:=xlPasteValues
+    .Range("B3:J3").Copy
+    ksontn4.Range("C9").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn4.Range("C16").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn4.Range("C19").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn4.Range("C25").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn4.Range("C28").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn4.Range("C31").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn4.Range("C34").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn4.Range("C37").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn4.Range("C22").PasteSpecial Paste:=xlPasteValues
+End With
+
+End Sub
+
+
+
+Sub 会計損益前年()
+
+Application.ScreenUpdating = False
+
+Dim ksonr As Integer
+With Workbooks("損益.xlsx").Sheets("前累計")
+    .Range("D1").Value = "期間区分"
+    For ksonr = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ksonr, 4) = "前累計"
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet3").Columns("A"), .Cells(ksonr, 1)) = 0 Then
+            .Cells(ksonr, 3).Value = .Cells(ksonr, 3).Value
+        Else
+            .Cells(ksonr, 3).Value = .Cells(ksonr, 3).Value * -1
+        End If
+    Next
+End With
+
+Dim ksont As Integer
+With Workbooks("損益.xlsx").Sheets("前単月")
+    .Range("D1").Value = "期間区分"
+    For ksont = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ksont, 4) = "前単月"
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet3").Columns("A"), .Cells(ksont, 1)) = 0 Then
+            .Cells(ksont, 3).Value = .Cells(ksont, 3).Value
+        Else
+            .Cells(ksont, 3).Value = .Cells(ksont, 3).Value * -1
+        End If
+    Next
+End With
+
+Workbooks("損益.xlsx").Sheets("前単月").Rows("1").Delete
+Workbooks("損益.xlsx").Sheets("前単月").Range("A1").CurrentRegion.Copy Workbooks("損益.xlsx").Sheets("前累計").Cells(Rows.Count, 1).End(xlUp).Offset(1, 0)
+
+
+Dim ksonb As Integer
+With Workbooks("損益.xlsx").Sheets("前累計")
+    .Range("E1").Value = "項目区分"
+    For ksonb = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet4").Columns("A"), .Cells(ksonb, 1)) = 0 Then
+            .Cells(ksonb, 5) = "13コピー外"
+        Else
+            .Cells(ksonb, 5) = WorksheetFunction.VLookup(.Cells(ksonb, 1), Workbooks("マスタ.xlsx").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+End With
+
+
+Dim ksonm As Integer
+With Workbooks("損益.xlsx").Sheets("前累計")
+    .Range("F1").Value = "店舗"
+    For ksonm = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("会計店舗").Columns("A"), .Cells(ksonm, 2)) = 0 Then
+            .Cells(ksonm, 6) = ""
+        Else
+            .Cells(ksonm, 6) = WorksheetFunction.VLookup(.Cells(ksonm, 2), Workbooks("マスタ.xlsx").Sheets("会計店舗").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+End With
+
+Dim pvtzen As PivotTable
+Dim srczen As Range
+Set srczen = Workbooks("損益.xlsx").Sheets("前累計").Range("A1").CurrentRegion
+Workbooks("損益.xlsx").Sheets.Add.Name = "ピボット前"
+
+Set pvtzen = _
+    Workbooks("損益.xlsx").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=srczen). _
+            CreatePivotTable(tabledestination:=Workbooks("損益.xlsx").Sheets("ピボット前").Range("A1"))
+
+
+With pvtzen
+    .AddFields RowFields:=Array("項目区分"), ColumnFields:=Array("店舗"), PageFields:=Array("期間区分")
+    .AddDataField _
+        Field:=pvtzen.PivotFields("値"), _
+        Function:=xlSum
+    .PivotFields("期間区分").CurrentPage = "前単月"
+End With
+Workbooks("損益.xlsx").Sheets.Add.Name = "転記前単月"
+Workbooks("損益.xlsx").Sheets("ピボット前").Range("A4:L19").Copy
+Workbooks("損益.xlsx").Sheets("転記前単月").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Workbooks("損益.xlsx").Sheets.Add.Name = "増田前単月"
+Workbooks("損益.xlsx").Sheets("ピボット前").Range("A4:L19").Copy
+Workbooks("損益.xlsx").Sheets("増田前単月").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+
+pvtzen.PivotFields("期間区分").CurrentPage = "前累計"
+Workbooks("損益.xlsx").Sheets.Add.Name = "転記前累計"
+Workbooks("損益.xlsx").Sheets("ピボット前").Range("A4:L19").Copy
+Workbooks("損益.xlsx").Sheets("転記前累計").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Workbooks("損益.xlsx").Sheets.Add.Name = "増田前累計"
+Workbooks("損益.xlsx").Sheets("ピボット前").Range("A4:L19").Copy
+Workbooks("損益.xlsx").Sheets("増田前累計").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Workbooks("損益.xlsx").Sheets("転記前累計").Range("N1") = 1000
+Workbooks("損益.xlsx").Sheets("転記前累計").Range("N1").Copy
+Workbooks("損益.xlsx").Sheets("転記前累計").Range("B2:L15").PasteSpecial Operation:=xlPasteSpecialOperationDivide
+Workbooks("損益.xlsx").Sheets("転記前単月").Range("B2:L15").PasteSpecial Operation:=xlPasteSpecialOperationDivide
+
+Workbooks("損益.xlsx").Sheets("増田前累計").Columns("I").Delete
+Workbooks("損益.xlsx").Sheets("増田前単月").Columns("I").Delete
+
+End Sub
+
 Sub 会議資料在庫ピボット()
 
 Application.ScreenUpdating = False
@@ -464,9 +692,9 @@ Sub 売上累計表0511()
 
 Application.ScreenUpdating = False
 
-Const tuki As Long = 5
-Const tukiKazu As Long = 31
-Const tukiMozi As String = "5月"
+Const tuki As Long = 6
+Const tukiKazu As Long = 30
+Const tukiMozi As String = "6月"
 
 Dim tenpoName As Variant
 tenpoName = Array("エバーレ", "上新庄", "吹田", "千里山", "千里", "伊丹", "本店", "全店")
@@ -1231,27 +1459,27 @@ With pvt
     .PivotFields("期間区分").CurrentPage = "単月"
 End With
 Workbooks("損益.xlsx").Sheets.Add.Name = "転記単月"
-Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L19").Copy
 Workbooks("損益.xlsx").Sheets("転記単月").Range("A1").PasteSpecial Paste:=xlPasteValues
 
 Workbooks("損益.xlsx").Sheets.Add.Name = "増田単月"
-Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L19").Copy
 Workbooks("損益.xlsx").Sheets("増田単月").Range("A1").PasteSpecial Paste:=xlPasteValues
 
 
 pvt.PivotFields("期間区分").CurrentPage = "累計"
 Workbooks("損益.xlsx").Sheets.Add.Name = "転記累計"
-Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L19").Copy
 Workbooks("損益.xlsx").Sheets("転記累計").Range("A1").PasteSpecial Paste:=xlPasteValues
 
 Workbooks("損益.xlsx").Sheets.Add.Name = "増田累計"
-Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L17").Copy
+Workbooks("損益.xlsx").Sheets("ピボット").Range("A4:L19").Copy
 Workbooks("損益.xlsx").Sheets("増田累計").Range("A1").PasteSpecial Paste:=xlPasteValues
 
 Workbooks("損益.xlsx").Sheets("転記累計").Range("N1") = 1000
 Workbooks("損益.xlsx").Sheets("転記累計").Range("N1").Copy
-Workbooks("損益.xlsx").Sheets("転記累計").Range("B2:L14").PasteSpecial Operation:=xlPasteSpecialOperationDivide
-Workbooks("損益.xlsx").Sheets("転記単月").Range("B2:L14").PasteSpecial Operation:=xlPasteSpecialOperationDivide
+Workbooks("損益.xlsx").Sheets("転記累計").Range("B2:L15").PasteSpecial Operation:=xlPasteSpecialOperationDivide
+Workbooks("損益.xlsx").Sheets("転記単月").Range("B2:L15").PasteSpecial Operation:=xlPasteSpecialOperationDivide
 
 Workbooks("損益.xlsx").Sheets("増田累計").Columns("I").Delete
 Workbooks("損益.xlsx").Sheets("増田単月").Columns("I").Delete
@@ -1279,15 +1507,17 @@ With ksontn1
     .Range("B5:J5").Copy
     ksontn3.Range("C18").PasteSpecial Paste:=xlPasteValues
     .Range("B6:J6").Copy
-    ksontn3.Range("C21").PasteSpecial Paste:=xlPasteValues
-    .Range("B7:J7").Copy
     ksontn3.Range("C24").PasteSpecial Paste:=xlPasteValues
-    .Range("B8:J8").Copy
+    .Range("B7:J7").Copy
     ksontn3.Range("C27").PasteSpecial Paste:=xlPasteValues
-    .Range("B9:J9").Copy
+    .Range("B8:J8").Copy
     ksontn3.Range("C30").PasteSpecial Paste:=xlPasteValues
-    .Range("B10:J10").Copy
+    .Range("B9:J9").Copy
     ksontn3.Range("C33").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C36").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn3.Range("C21").PasteSpecial Paste:=xlPasteValues
 End With
 
 With ksontn2
@@ -1300,74 +1530,21 @@ With ksontn2
     .Range("B5:J5").Copy
     ksontn4.Range("C18").PasteSpecial Paste:=xlPasteValues
     .Range("B6:J6").Copy
-    ksontn4.Range("C21").PasteSpecial Paste:=xlPasteValues
-    .Range("B7:J7").Copy
     ksontn4.Range("C24").PasteSpecial Paste:=xlPasteValues
-    .Range("B8:J8").Copy
+    .Range("B7:J7").Copy
     ksontn4.Range("C27").PasteSpecial Paste:=xlPasteValues
-    .Range("B9:J9").Copy
+    .Range("B8:J8").Copy
     ksontn4.Range("C30").PasteSpecial Paste:=xlPasteValues
-    .Range("B10:J10").Copy
+    .Range("B9:J9").Copy
     ksontn4.Range("C33").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn4.Range("C36").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn4.Range("C21").PasteSpecial Paste:=xlPasteValues
 End With
 
 End Sub
 
-Sub 会計損益前年転記()
-Application.ScreenUpdating = False
-Dim ksonzn1 As Worksheet
-Dim ksonzn2 As Worksheet
-Dim ksonzn3 As Worksheet
-Dim ksonzn4 As Worksheet
-Set ksonzn1 = Workbooks("前売上利益表.xlsx").Sheets("単月")
-Set ksonzn2 = Workbooks("前売上利益表.xlsx").Sheets("累計")
-Set ksonzn3 = Workbooks("売上利益表.xlsx").Sheets("単月")
-Set ksonzn4 = Workbooks("売上利益表.xlsx").Sheets("累計")
-
-With ksonzn1
-    .Range("C5:K5").Copy
-    ksonzn3.Range("C6").PasteSpecial Paste:=xlPasteValues
-    .Range("C8:K8").Copy
-    ksonzn3.Range("C9").PasteSpecial Paste:=xlPasteValues
-    .Range("C14:K14").Copy
-    ksonzn3.Range("C16").PasteSpecial Paste:=xlPasteValues
-    .Range("C17:K17").Copy
-    ksonzn3.Range("C19").PasteSpecial Paste:=xlPasteValues
-    .Range("C20:K20").Copy
-    ksonzn3.Range("C22").PasteSpecial Paste:=xlPasteValues
-    .Range("C23:K23").Copy
-    ksonzn3.Range("C25").PasteSpecial Paste:=xlPasteValues
-    .Range("C26:K26").Copy
-    ksonzn3.Range("C28").PasteSpecial Paste:=xlPasteValues
-    .Range("C29:K29").Copy
-    ksonzn3.Range("C31").PasteSpecial Paste:=xlPasteValues
-    .Range("C32:K32").Copy
-    ksonzn3.Range("C34").PasteSpecial Paste:=xlPasteValues
-End With
-
-With ksonzn2
-    .Range("C5:K5").Copy
-    ksonzn4.Range("C6").PasteSpecial Paste:=xlPasteValues
-    .Range("C8:K8").Copy
-    ksonzn4.Range("C9").PasteSpecial Paste:=xlPasteValues
-    .Range("C14:K14").Copy
-    ksonzn4.Range("C16").PasteSpecial Paste:=xlPasteValues
-    .Range("C17:K17").Copy
-    ksonzn4.Range("C19").PasteSpecial Paste:=xlPasteValues
-    .Range("C20:K20").Copy
-    ksonzn4.Range("C22").PasteSpecial Paste:=xlPasteValues
-    .Range("C23:K23").Copy
-    ksonzn4.Range("C25").PasteSpecial Paste:=xlPasteValues
-    .Range("C26:K26").Copy
-    ksonzn4.Range("C28").PasteSpecial Paste:=xlPasteValues
-    .Range("C29:K29").Copy
-    ksonzn4.Range("C31").PasteSpecial Paste:=xlPasteValues
-    .Range("C32:K32").Copy
-    ksonzn4.Range("C34").PasteSpecial Paste:=xlPasteValues
-End With
-
-
-End Sub
 
 
 Sub 会計損益増田転記()

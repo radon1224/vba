@@ -59,7 +59,7 @@ With pjas
         .Cells(pjai, 21).Value = WorksheetFunction.VLookup(.Cells(pjai, 20), Workbooks("マスタ.xlsx").Worksheets("ジャーナル").Range("A1").CurrentRegion, 2, False)
         
         
-        Next
+    Next
 
 End With
 
@@ -508,7 +508,3 @@ End With
 
 
 End Sub
-
-Sub test()
-End Sub
-

@@ -1,0 +1,554 @@
+Sub 単品2016()
+'
+Application.ScreenUpdating = False
+
+Dim ptan As Worksheet
+Dim ptani1 As Long
+Dim ia As Long
+Dim ib As Long
+Dim ic As Long
+Dim id As Long
+Dim ie As Long
+Dim ig As Long
+Dim ii As Long
+Dim ih As Long
+Dim puri As Workbook
+Dim psii As Workbook
+Set puri = Workbooks("売上.xls")
+Set psii = Workbooks("仕入.xls")
+Set ptan = Workbooks("単品.xls").Sheets("sheet1")
+
+'売上
+puri.Worksheets("sheet1").Rows("1:2").Delete
+
+Dim pvt As PivotTable
+Dim src As Range
+
+Set src = puri.Worksheets("sheet1").Range("A1").CurrentRegion
+puri.Sheets.Add
+
+Set pvt = _
+    puri.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=puri.Sheets("sheet2").Range("A1"))
+
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("販売数"), _
+        Function:=xlSum
+End With
+
+With puri.Sheets("sheet1")
+    .Columns("A:L").Delete
+    .Columns("C:E").Delete
+    .Columns("H:L").Delete
+End With
+
+puri.Sheets.Add
+
+Dim myRange As Range
+Set myRange = puri.Sheets("sheet1").Range("A1").CurrentRegion
+
+With puri.Sheets("sheet1").Sort
+    .SortFields.Add myRange.Columns("G"), xlSortOnValues, xlAscending
+    .SetRange myRange
+    .Header = xlYes
+    .Orientation = xlTopToBottom
+    .Apply
+End With
+
+With myRange
+    .AutoFilter Field:=7, Criteria1:="0000000000000"
+    .Copy puri.Sheets("Sheet3").Range("A1")
+End With
+
+
+Dim i As Long
+
+With puri.Sheets("sheet3")
+    .Columns("B").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Columns("D:E").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("B1").Value = "粗利合計"
+    For i = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(i, 2) = .Cells(i, 1) - .Cells(i, 3)
+        .Cells(i, 5) = "17プロパー"
+    Next
+End With
+
+puri.Sheets.Add
+puri.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+puri.Sheets("Sheet4").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'仕入
+
+psii.Worksheets("sheet1").Rows("1:2").Delete
+
+Dim pvts As PivotTable
+Dim srcs As Range
+
+Set srcs = psii.Worksheets("sheet1").Range("A1").CurrentRegion
+psii.Sheets.Add
+Set pvts = _
+    psii.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=srcs). _
+            CreatePivotTable(tabledestination:=psii.Worksheets("sheet2").Range("A1"))
+With pvts
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvts.PivotFields("原価合計"), _
+        Function:=xlSum
+End With
+
+psii.Sheets("sheet1").Columns("A:L").Delete
+psii.Sheets("sheet1").Columns("F:L").Delete
+psii.Sheets.Add
+With psii.Sheets("sheet1").Range("A1")
+    .CurrentRegion.AutoFilter Field:=5, Criteria1:="2009999999999"
+    .CurrentRegion.Copy psii.Sheets("Sheet3").Range("A1")
+End With
+
+With psii.Sheets("sheet3")
+    .Columns("A").Cut .Columns("I")
+End With
+
+psii.Sheets.Add
+psii.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+psii.Sheets("Sheet4").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+Dim psiii As Long
+psiii = 0
+
+For psiii = 3 To 7
+    If psii.Sheets("sheet4").Cells(psiii, 1) = "2009999999999" Then
+        psii.Sheets("sheet4").Cells(psiii, 1).EntireRow.Delete
+    End If
+Next
+'出庫
+
+Workbooks("出庫.xls").Worksheets("sheet1").Rows("1:2").Delete
+
+Dim pvti  As PivotTable
+Dim srci  As Range
+
+Workbooks("出庫.xls").Worksheets("sheet1").Range("M1") = "変更前金額"
+Set srci = Workbooks("出庫.xls").Worksheets("sheet1").Range("A1").CurrentRegion
+Workbooks("出庫.xls").Sheets.Add
+Set pvti = _
+    Workbooks("出庫.xls").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=srci). _
+            CreatePivotTable(tabledestination:=Workbooks("出庫.xls").Worksheets("sheet2").Range("A1"))
+With pvti
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvti.PivotFields("変更前金額"), _
+        Function:=xlSum
+End With
+
+Workbooks("出庫.xls").Sheets.Add
+Workbooks("出庫.xls").Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Workbooks("出庫.xls").Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'在庫
+
+With Workbooks("期首在庫.xls").Worksheets("sheet1")
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 7).End(xlUp).EntireRow.Delete
+    .Columns("O").Cut
+    .Columns("A").Insert Shift:=xlToRight
+    .Columns("B:G").Delete
+    .Columns("C:H").Delete
+    .Columns("D:P").Delete
+End With
+
+With Workbooks("期末在庫.xls").Worksheets("sheet1")
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 7).End(xlUp).EntireRow.Delete
+    .Columns("O").Cut
+    .Columns("A").Insert Shift:=xlToRight
+    .Columns("B:G").Delete
+    .Columns("C:H").Delete
+    .Columns("D:P").Delete
+End With
+
+
+
+'単品開始
+'不要行削除等項目整理
+With ptan
+    .Rows("1:2").Delete
+    .Cells(Rows.Count, 12).End(xlUp).EntireRow.Delete
+    .Columns("W:AA").Delete
+    .Columns("M:Q").Delete
+    .Columns("I").Delete
+    .Columns("G").Delete
+    .Columns("K:M").Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+    .Range("K1").Value = "原価額"
+    .Range("L1").Value = "掛率"
+    .Range("M1").Value = "特価区分"
+
+
+'特価区分
+    For ptani1 = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        .Cells(ptani1, 11) = .Cells(ptani1, 9) - .Cells(ptani1, 10)
+        If .Cells(ptani1, 6) = 0 Then
+            .Cells(ptani1, 12) = 0
+        Else
+            .Cells(ptani1, 12) = .Cells(ptani1, 7).Value / .Cells(ptani1, 6).Value
+        End If
+        
+        If (.Cells(ptani1, 12) > 0.55 Or .Cells(ptani1, 12) < 0.02) And .Cells(ptani1, 1) = 2017 Then
+            .Cells(ptani1, 13) = "17プロパー"
+        ElseIf (.Cells(ptani1, 12) > 0.55 Or .Cells(ptani1, 12) < 0.02) And .Cells(ptani1, 1) <> 2017 Then
+            .Cells(ptani1, 13) = "16プロパー"
+        Else
+            .Cells(ptani1, 13) = "特価"
+        End If
+    Next
+    
+    ptani1 = 0
+    
+    For ptani1 = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If .Cells(ptani1, 14) <> "車体" Then
+            .Cells(ptani1, 13) = ""
+        End If
+    Next
+    
+'外部情報をバーコードで結ぶ
+
+    .Range("S1").Value = "期首在庫"
+    .Range("T1").Value = "期末在庫"
+    .Range("U1").Value = "期末在庫数"
+    .Range("V1").Value = "仕入額"
+    .Range("W1").Value = "在庫移動"
+    .Range("X1").Value = "売数"
+
+    For ia = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("期首在庫.xls").Sheets("sheet1").Columns("A"), .Cells(ia, 18)) = 0 Then
+            .Cells(ia, 19) = 0
+        Else
+            .Cells(ia, 19) = WorksheetFunction.VLookup(.Cells(ia, 18), Workbooks("期首在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion, 3, False)
+        End If
+    Next
+
+    For ib = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("期末在庫.xls").Sheets("sheet1").Columns("A"), .Cells(ib, 18)) = 0 Then
+            .Cells(ib, 20) = 0
+        Else
+            .Cells(ib, 20) = WorksheetFunction.VLookup(.Cells(ib, 18), Workbooks("期末在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion, 3, False)
+        End If
+
+        If WorksheetFunction.CountIf(Workbooks("期末在庫.xls").Sheets("sheet1").Columns("A"), .Cells(ib, 18)) = 0 Then
+            .Cells(ib, 21) = 0
+        Else
+            .Cells(ib, 21) = WorksheetFunction.VLookup(.Cells(ib, 18), Workbooks("期末在庫.xls").Sheets("sheet1").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+
+    For ic = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("仕入.xls").Sheets("sheet4").Columns("A"), .Cells(ic, 18)) = 0 Then
+            .Cells(ic, 22) = 0
+        Else
+            .Cells(ic, 22) = WorksheetFunction.VLookup(.Cells(ic, 18), Workbooks("仕入.xls").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+
+
+    For id = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("出庫.xls").Sheets("sheet3").Columns("A"), .Cells(id, 18)) = 0 Then
+            .Cells(id, 23) = 0
+        Else
+            .Cells(id, 23) = WorksheetFunction.VLookup(.Cells(id, 18), Workbooks("出庫.xls").Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+    Next
+
+
+    For ie = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("売上.xls").Sheets("sheet4").Columns("A"), .Cells(ie, 18)) = 0 Then
+            .Cells(ie, 24) = 0
+        Else
+            .Cells(ie, 24) = WorksheetFunction.VLookup(.Cells(ie, 18), Workbooks("売上.xls").Sheets("sheet4").Range("A1").CurrentRegion, 2, False)
+        End If
+
+    Next
+
+'部門打ち売上と値引き分をコピペ
+    psii.Sheets("sheet3").Range(psii.Sheets("sheet3").Cells(2, 2), psii.Sheets("sheet3").Cells(psii.Sheets("sheet3").Cells(Rows.Count, 9).End(xlUp).Row, 9)).Copy _
+        ptan.Cells(ptan.Cells(Rows.Count, 15).End(xlUp).Row, 15).Offset(1, 0)
+
+    puri.Sheets("sheet3").Range(puri.Sheets("sheet3").Cells(2, 1), puri.Sheets("sheet3").Cells(puri.Sheets("sheet3").Cells(Rows.Count, 10).End(xlUp).Row, 10)).Copy _
+        ptan.Cells(ptan.Cells(Rows.Count, 15).End(xlUp).Row, 9).Offset(1, 0)
+'カテゴリー分け変更
+    For ig = 2 To .Cells(Rows.Count, 16).End(xlUp).Row
+        .Cells(ig, 14) = WorksheetFunction.VLookup(.Cells(ig, 15), Workbooks("マスタ.xlsx").Worksheets("sheet1").Range("A1").CurrentRegion, 4, False)
+        If .Cells(ig, 16) = "電動自転車" Then
+            .Cells(ig, 2) = "電動自転車"
+        ElseIf .Cells(ig, 14) <> "車体" Then
+            .Cells(ig, 2) = WorksheetFunction.VLookup(.Cells(ig, 15), Workbooks("マスタ.xlsx").Worksheets("sheet1").Range("A1").CurrentRegion, 3, False)
+        Else
+            .Cells(ig, 2) = .Cells(ig, 2).Value
+        End If
+    Next
+'ブランドに特化区分を追加　ピボット用の店舗番号
+
+    .Range("Y1").Value = "売特"
+    .Range("Z1").Value = "在特"
+    .Range("AA1").Value = "売16"
+    .Range("AB1").Value = "在16"
+    .Range("AC1").Value = "売17"
+    .Range("AD1").Value = "在17"
+    .Range("AE1").Value = "番号店舗"
+
+    For ii = 2 To .Cells(Rows.Count, 16).End(xlUp).Row
+        If .Cells(ii, 13) = "特価" Then
+            .Cells(ii, 25) = .Cells(ii, 9).Value
+            .Cells(ii, 26) = .Cells(ii, 20).Value
+        Else
+            .Cells(ii, 25) = 0
+            .Cells(ii, 26) = 0
+        End If
+    
+        If .Cells(ii, 13) = "16プロパー" Then
+            .Cells(ii, 27) = .Cells(ii, 9).Value
+            .Cells(ii, 28) = .Cells(ii, 20).Value
+        Else
+            .Cells(ii, 27) = 0
+            .Cells(ii, 28) = 0
+        End If
+    
+    
+        If .Cells(ii, 13) = "17プロパー" Then
+            .Cells(ii, 29) = .Cells(ii, 9).Value
+            .Cells(ii, 30) = .Cells(ii, 20).Value
+        Else
+            .Cells(ii, 29) = 0
+            .Cells(ii, 30) = 0
+        End If
+    
+        .Cells(ii, 31) = WorksheetFunction.VLookup(.Cells(ii, 17), Workbooks("マスタ.xlsx").Sheets("会計店舗").Range("E1:F7"), 2, False)
+    Next
+    
+    For ih = 2 To Cells(Rows.Count, 15).End(xlUp).Row
+        If WorksheetFunction.CountIf(Workbooks("マスタ.xlsx").Sheets("sheet1").Range("F2:F22"), .Cells(ih, 3)) = 0 Or .Cells(ih, 22) = 0 Then
+            .Cells(ih, 14).Value = .Cells(ih, 14).Value
+        Else
+            .Cells(ih, 14) = WorksheetFunction.VLookup(.Cells(ih, 3), Workbooks("マスタ.xlsx").Sheets("sheet1").Range("F2:G22"), 2, False)
+        End If
+    Next
+End With
+'最終ピボット
+Dim ptanpvt As PivotTable
+Dim ptansrc As Range
+
+Set ptansrc = ptan.Range("A1").CurrentRegion
+Workbooks("単品.xls").Sheets.Add
+Set ptanpvt = _
+    Workbooks("単品.xls").PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=ptansrc). _
+            CreatePivotTable(tabledestination:=Workbooks("単品.xls").Sheets("sheet2").Range("A1"))
+
+With ptanpvt
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売上額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("粗利額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("期首在庫"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("仕入額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("原価額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在庫移動"), _
+        Function:=xlSum
+     .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売数"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫数"), _
+        Function:=xlSum
+End With
+End Sub
+
+Sub 単品各店2016()
+Application.ScreenUpdating = False
+
+Dim title As String
+title = InputBox("表のタイトル", "表のタイトル", "")
+Dim tukiKazu As Long
+tukiKazu = InputBox("何カ月間か", "何カ月間か", "")
+Dim KaitenSisuu As Double
+KaitenSisuu = (1 / tukiKazu) * 12
+Dim ptanB As Workbook
+Set ptanB = Workbooks("単品.xls")
+Dim i As Long
+Dim myRange As Range
+Dim ptanpvt As PivotTable
+Dim ptansrc As Range
+Set ptansrc = ptanB.Sheets("Sheet1").Range("A1").CurrentRegion
+ptanB.Sheets.Add.Name = "ピボット"
+Set ptanpvt = _
+    ptanB.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=ptansrc). _
+            CreatePivotTable(tabledestination:=ptanB.Sheets("ピボット").Range("A1"))
+With ptanpvt
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売上額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("粗利額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("期首在庫"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("仕入額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("原価額"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在庫移動"), _
+        Function:=xlSum
+     .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売数"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("期末在庫数"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売特"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在特"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売16"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在16"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("売17"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("在17"), _
+        Function:=xlSum
+    .AddDataField _
+        Field:=ptanpvt.PivotFields("平均在庫額"), _
+        Function:=xlSum
+    .AddFields _
+        RowFields:=Array("ブランド名"), _
+        PageFields:=Array("店舗名")
+    .DataPivotField.Orientation = xlColumnField
+End With
+
+Dim tenpoName As Variant
+Dim z As Long
+tenpoName = Array("ｴﾊﾞｰﾚ店", "上新庄店", "吹田店", "阪急千里山店", "千里店", "伊丹店", "本店")
+For z = 0 To 6
+    ptanpvt.PivotFields("店舗名").CurrentPage = tenpoName(z)
+    ptanB.Sheets.Add.Name = tenpoName(z)
+    ptanB.Sheets("ピボット").Range("A5").CurrentRegion.Copy
+    ptanB.Sheets(tenpoName(z)).Range("A2").PasteSpecial Paste:=xlPasteValues
+    With ptanB.Sheets(tenpoName(z))
+        .Range("B2").ClearContents
+        .Range("B3") = "売上額"
+        .Range("C3") = "粗利額"
+        .Range("D3") = "期首在庫"
+        .Range("E3") = "仕入高"
+        .Range("F3") = "売原価"
+        .Range("G3") = "移動"
+        .Range("H3") = "期末在庫"
+        .Range("I3") = "売数"
+        .Range("J3") = "在数"
+        .Range("K3") = "売特"
+        .Range("L3") = "在特"
+        .Range("M3") = "売16"
+        .Range("N3") = "残16"
+        .Range("O3") = "売17"
+        .Range("P3") = "残17"
+        .Range("Q3") = "平均在庫"
+        .Range("R3") = "粗利率"
+        .Range("S3") = "回転率"
+        .Range("T3") = "売比"
+        .Range("U3") = "在比"
+        i = 0
+        For i = 4 To .Cells(65536, 2).End(xlUp).Row
+
+            If .Cells(i, 2) <> 0 Then
+                .Cells(i, 18) = .Cells(i, 3) / .Cells(i, 2)
+            End If
+            If .Cells(i, 17) <> 0 Then
+                .Cells(i, 19) = (.Cells(i, 6) * KaitenSisuu) / .Cells(i, 17)
+            End If
+        Next
+        i = 0
+        For i = 4 To .Cells(65536, 2).End(xlUp).Offset(-1, 0).Row
+            .Cells(i, 20) = .Cells(i, 2) / .Cells(65536, 2).End(xlUp)
+            .Cells(i, 21) = .Cells(i, 8) / .Cells(65536, 8).End(xlUp)
+        Next
+        .Range("A3:U3").Font.Size = 9
+        .Range("A1:U1").Font.Size = 11
+        .Range(.Cells(4, 1), .Cells(.Cells(65536, 2).End(xlUp).Row, 21)).Font.Size = 11
+        .Range(.Cells(4, 2), .Cells(.Cells(65536, 2).End(xlUp).Row, 8)).NumberFormatLocal _
+            = "#,##0,;[赤]-#,##0,"
+        .Range(.Cells(4, 9), .Cells(.Cells(65536, 2).End(xlUp).Row, 10)).NumberFormatLocal _
+            = "#,##0;[赤]-#,##0"
+        .Range(.Cells(4, 11), .Cells(.Cells(65536, 2).End(xlUp).Row, 17)).NumberFormatLocal _
+            = "#,##0,;[赤]-#,##0,"
+        .Range(.Cells(4, 18), .Cells(.Cells(65536, 2).End(xlUp).Row, 18)).NumberFormatLocal _
+            = "0.0%"
+        .Range(.Cells(4, 19), .Cells(.Cells(65536, 2).End(xlUp).Row, 19)).NumberFormatLocal _
+            = "#0.0"
+        .Range(.Cells(4, 20), .Cells(.Cells(65536, 2).End(xlUp).Row, 21)).NumberFormatLocal _
+            = "0.0%"
+        Set myRange = Nothing
+        Set myRange = .Range(.Cells(3, 1), .Cells(.Cells(65536, 2).End(xlUp).Offset(-1, 0).Row, 21))
+        With .Sort
+            .SortFields.Add myRange.Columns("B"), xlSortOnValues, xlDescending
+            .SetRange myRange
+            .Header = xlYes
+            .Orientation = xlTopToBottom
+            .Apply
+        End With
+        .Columns("A:U").EntireColumn.AutoFit
+        .Range(.Cells(3, 1), .Cells(.Cells(65536, 2).End(xlUp).Row, 21)).Borders.LineStyle = xlDash
+        .Range(.Cells(3, 1), .Cells(.Cells(65536, 2).End(xlUp).Row, 21)).Borders.Weight = xlHairline
+        .Columns("G").Hidden = True
+        .Columns("Q").Hidden = True
+        .Range("A1") = tenpoName(z)
+        .Range("B1") = title
+        .Range("E1") = "単位千円"
+        .Columns("A").ColumnWidth = 14.5
+        With .PageSetup
+            .Orientation = xlLandscape
+            .LeftMargin = Application.CentimetersToPoints(0.9)
+            .RightMargin = Application.CentimetersToPoints(0.4)
+            .TopMargin = Application.CentimetersToPoints(0.9)
+            .BottomMargin = Application.CentimetersToPoints(0.4)
+            .PrintTitleRows = "$3:$3"
+        End With
+        .Range("A3:U3").VerticalAlignment = xlCenter
+        .Range("B3:U3").HorizontalAlignment = xlCenter
+        .ExportAsFixedFormat Type:=xlTypePDF, Filename:="d:\abc\itizi\" & tenpoName(z) & ".pdf"
+    End With
+Next
+End Sub
+
