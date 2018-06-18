@@ -1,4 +1,64 @@
-Sub 会計損益変動費転記()
+Sub 会計損益変動費転記単月()
+Application.ScreenUpdating = False
+
+Dim ksontn1 As Worksheet
+Dim ksontn2 As Worksheet
+Dim ksontn3 As Worksheet
+Set ksontn1 = Workbooks("損益.xlsx").Sheets("転記単月")
+Set ksontn2 = Workbooks("損益.xlsx").Sheets("転記前単月")
+Set ksontn3 = Workbooks("変動損益計算書.xlsx").Sheets("単月")
+
+
+With ksontn1
+    .Range("B2:J2").Copy
+    ksontn3.Range("C5").PasteSpecial Paste:=xlPasteValues
+    .Range("B15:J15").Copy
+    ksontn3.Range("C12").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn3.Range("C16").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn3.Range("C28").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn3.Range("C31").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn3.Range("C37").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn3.Range("C40").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn3.Range("C43").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C46").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn3.Range("C34").PasteSpecial Paste:=xlPasteValues
+  End With
+  
+With ksontn2
+    .Range("B2:J2").Copy
+    ksontn3.Range("C6").PasteSpecial Paste:=xlPasteValues
+    .Range("B15:J15").Copy
+    ksontn3.Range("C13").PasteSpecial Paste:=xlPasteValues
+    .Range("B7:J7").Copy
+    ksontn3.Range("C17").PasteSpecial Paste:=xlPasteValues
+    .Range("B4:J4").Copy
+    ksontn3.Range("C29").PasteSpecial Paste:=xlPasteValues
+    .Range("B5:J5").Copy
+    ksontn3.Range("C32").PasteSpecial Paste:=xlPasteValues
+    .Range("B6:J6").Copy
+    ksontn3.Range("C38").PasteSpecial Paste:=xlPasteValues
+    .Range("B8:J8").Copy
+    ksontn3.Range("C41").PasteSpecial Paste:=xlPasteValues
+    .Range("B9:J9").Copy
+    ksontn3.Range("C44").PasteSpecial Paste:=xlPasteValues
+    .Range("B10:J10").Copy
+    ksontn3.Range("C47").PasteSpecial Paste:=xlPasteValues
+    .Range("B14:J14").Copy
+    ksontn3.Range("C35").PasteSpecial Paste:=xlPasteValues
+  End With
+
+End Sub
+
+
+Sub 会計損益変動費転記累計()
 Application.ScreenUpdating = False
 
 Dim ksontn1 As Worksheet
