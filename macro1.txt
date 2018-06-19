@@ -1,3 +1,237 @@
+Sub 棚卸準備()
+Application.ScreenUpdating = False
+
+
+
+'単品
+Set Tanpinbook = Workbooks("単品.xls")
+Set TanpinSheet = Workbooks("単品.xls").Sheets("sheet1")
+
+With TanpinSheet
+    .Rows("1:2").Delete
+    .Columns("F:H").Delete
+    .Columns("G:N").Delete
+    .Columns("L:P").Delete
+    .Range("L1").Value = "売上"
+    .Range("M1").Value = "仕入"
+    .Range("N1").Value = "出庫"
+    .Range("O1").Value = "期首"
+    .Range("P1").Value = "期末"
+    .Range("Q1").Value = "期末計算"
+    .Range("R1").Value = "差異"
+End With
+
+
+
+
+
+'売上
+Dim i As Long
+Set Uriagebook = Workbooks("売上.xls")
+Set UriageSheet = Workbooks("売上.xls").Sheets("sheet1")
+
+
+UriageSheet.Rows("1:2").Delete
+
+Dim pvt As PivotTable
+Dim src As Range
+
+Set src = UriageSheet.Range("A1").CurrentRegion
+Uriagebook.Sheets.Add
+
+Set pvt = _
+    Uriagebook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Uriagebook.Sheets("sheet2").Range("A1"))
+
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("販売数"), _
+        Function:=xlSum
+End With
+
+Uriagebook.Sheets.Add
+Uriagebook.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Uriagebook.Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'仕入
+Set Siirebook = Workbooks("仕入.xls")
+Set SiireSheet = Workbooks("仕入.xls").Sheets("sheet1")
+
+SiireSheet.Rows("1:2").Delete
+
+Set pvt = Nothing
+Set src = Nothing
+
+Set src = SiireSheet.Range("A1").CurrentRegion
+Siirebook.Sheets.Add
+
+Set pvt = _
+    Siirebook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Siirebook.Sheets("sheet2").Range("A1"))
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("仕入数"), _
+        Function:=xlSum
+End With
+            
+Siirebook.Sheets.Add
+Siirebook.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Siirebook.Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'出庫
+Set Shukobook = Workbooks("出庫.xls")
+Set ShukoSheet = Workbooks("出庫.xls").Sheets("sheet1")
+
+ShukoSheet.Rows("1:2").Delete
+
+Set pvt = Nothing
+Set src = Nothing
+
+Set src = ShukoSheet.Range("A1").CurrentRegion
+Shukobook.Sheets.Add
+
+Set pvt = _
+    Shukobook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Shukobook.Sheets("sheet2").Range("A1"))
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("出庫数"), _
+        Function:=xlSum
+End With
+            
+Shukobook.Sheets.Add
+Shukobook.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Shukobook.Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+
+'期首在庫
+Set Kishubook = Workbooks("期首在庫.xls")
+Set KishuSheet = Workbooks("期首在庫.xls").Sheets("sheet1")
+
+KishuSheet.Rows("1:2").Delete
+
+Set pvt = Nothing
+Set src = Nothing
+
+Set src = KishuSheet.Range("A1").CurrentRegion
+Kishubook.Sheets.Add
+
+Set pvt = _
+    Kishubook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Kishubook.Sheets("sheet2").Range("A1"))
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("在庫数"), _
+        Function:=xlSum
+End With
+            
+Kishubook.Sheets.Add
+Kishubook.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Kishubook.Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+'期末在庫
+Set Kimatubook = Workbooks("期末在庫.xls")
+Set KimatuSheet = Workbooks("期末在庫.xls").Sheets("sheet1")
+
+KimatuSheet.Rows("1:2").Delete
+
+Set pvt = Nothing
+Set src = Nothing
+
+Set src = KimatuSheet.Range("A1").CurrentRegion
+Kimatubook.Sheets.Add
+
+Set pvt = _
+    Kimatubook.PivotCaches.Add( _
+        SourceType:=xlDatabase, _
+        SourceData:=src). _
+            CreatePivotTable(tabledestination:=Kimatubook.Sheets("sheet2").Range("A1"))
+With pvt
+    .AddFields RowFields:=Array("バーコード")
+    .AddDataField _
+        Field:=pvt.PivotFields("在庫数"), _
+        Function:=xlSum
+End With
+            
+Kimatubook.Sheets.Add
+Kimatubook.Sheets("sheet2").Range("A1").CurrentRegion.Copy
+Kimatubook.Sheets("Sheet3").Range("A1").PasteSpecial Paste:=xlPasteValues
+
+
+
+'単品
+
+With TanpinSheet
+    For i = 2 To .Cells(Rows.Count, 1).End(xlUp).Row
+        If WorksheetFunction.CountIf(Uriagebook.Sheets("sheet3").Columns("A"), .Cells(i, 11)) = 0 Then
+            .Cells(i, 12) = 0
+        Else
+            .Cells(i, 12) = WorksheetFunction.VLookup(.Cells(i, 11), Uriagebook.Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+        If WorksheetFunction.CountIf(Siirebook.Sheets("sheet3").Columns("A"), .Cells(i, 11)) = 0 Then
+            .Cells(i, 13) = 0
+        Else
+            .Cells(i, 13) = WorksheetFunction.VLookup(.Cells(i, 11), Siirebook.Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+        If WorksheetFunction.CountIf(Shukobook.Sheets("sheet3").Columns("A"), .Cells(i, 11)) = 0 Then
+            .Cells(i, 14) = 0
+        Else
+            .Cells(i, 14) = WorksheetFunction.VLookup(.Cells(i, 11), Shukobook.Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+        
+        If WorksheetFunction.CountIf(Kishubook.Sheets("sheet3").Columns("A"), .Cells(i, 11)) = 0 Then
+            .Cells(i, 15) = 0
+        Else
+            .Cells(i, 15) = WorksheetFunction.VLookup(.Cells(i, 11), Kishubook.Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+        If WorksheetFunction.CountIf(Kimatubook.Sheets("sheet3").Columns("A"), .Cells(i, 11)) = 0 Then
+            .Cells(i, 16) = 0
+        Else
+            .Cells(i, 16) = WorksheetFunction.VLookup(.Cells(i, 11), Kimatubook.Sheets("sheet3").Range("A1").CurrentRegion, 2, False)
+        End If
+        .Cells(i, 17) = .Cells(i, 15).Value - .Cells(i, 12).Value + .Cells(i, 13).Value - .Cells(i, 14).Value
+        .Cells(i, 18) = Abs(.Cells(i, 17).Value - .Cells(i, 16).Value)
+    Next
+End With
+
+With TanpinSheet
+i = 0
+For i = 2 To .Cells(65536, 8).End(xlUp).Row
+    .Cells(i, 8).Value = .Cells(i, 8).Value
+Next
+
+i = 0
+For i = .Cells(65536, 11).End(xlUp).Row To 2 Step -1
+    If .Cells(i, 8).Value > 90 Then
+        .Cells(i, 8).EntireRow.Delete
+    End If
+Next
+.Range("S1") = WorksheetFunction.Sum(.Columns("R"))
+MsgBox .Range("S1").Value
+End With
+
+
+
+
+End Sub
+
+
+
+
+
+
 Sub 会計損益変動費転記単月()
 Application.ScreenUpdating = False
 
@@ -548,8 +782,8 @@ NewFilePath = Application.GetOpenFilename("Microsoft Excelブック,*.xls?")
 Workbooks.Open NewFilePath
 Dim newFileName As String
 newFileName = ActiveWorkbook.Name
-Set KimatuBook = Workbooks(newFileName)
-Set KimatuSheet = KimatuBook.Sheets("sheet1")
+Set Kimatubook = Workbooks(newFileName)
+Set KimatuSheet = Kimatubook.Sheets("sheet1")
 Dim KimatuDay As String
 KimatuDay = Mid(KimatuSheet.Range("A2"), 5, 12)
 
@@ -643,7 +877,7 @@ ThisWorkbook.Worksheets("差異表").Activate
 
     Application.DisplayAlerts = False
     KisyuBook.Close
-    KimatuBook.Close
+    Kimatubook.Close
 
 End Sub
 
@@ -652,7 +886,7 @@ Application.ScreenUpdating = False
 Dim i As Long
 Set KisyuBook = Workbooks("期首.xls")
 Set KisyuSheet = Workbooks("期首.xls").Sheets("sheet1")
-Set KimatuBook = Workbooks("期末.xls")
+Set Kimatubook = Workbooks("期末.xls")
 Set KimatuSheet = Workbooks("期末.xls").Sheets("sheet1")
 Dim KisyuDay As String
 Dim KimatuDay As String

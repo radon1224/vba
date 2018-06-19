@@ -170,7 +170,6 @@ For pjai = 2 To .Cells(65536, 3).End(xlUp).Row
 Next
 End With
 End Sub
-
 Sub a棚卸差異表車体()
 Rows("1:2").Delete
 Cells(65536, 11).End(xlUp).EntireRow.Delete
@@ -197,13 +196,25 @@ For i = 2 To Cells(65536, 11).End(xlUp).Row
     Cells(i, 12).Value = Cells(i, 12).Value
 Next
 i = 0
-For i = 2 To Cells(65536, 11).End(xlUp).Row
+For i = Cells(65536, 11).End(xlUp).Row To 2 Step -1
     If Cells(i, 12).Value > 10 Then
         Cells(i, 12).EntireRow.Delete
     End If
 Next
-
-
+Columns("L:M").Delete
+With Range("A1").CurrentRegion
+    .Borders.LineStyle = xlDash
+    .Borders.Weight = xlHairline
+End With
+Columns("A:K").EntireColumn.AutoFit
+With ActiveSheet.PageSetup
+    .TopMargin = Application.CentimetersToPoints(1)
+    .LeftMargin = Application.CentimetersToPoints(0.5)
+    .RightMargin = Application.CentimetersToPoints(0.5)
+    .Orientation = xlLandscape
+    .PrintTitleRows = "$1:$1"
+End With
+'        Cells(i, 12).EntireRow.Delete
 
 'With Range("A1").CurrentRegion
 '    .Borders.LineStyle = xlDash
@@ -234,10 +245,50 @@ With Range("A1").CurrentRegion
     .Borders.Weight = xlHairline
 End With
 Columns("A:K").EntireColumn.AutoFit
-ActiveSheet.PageSetup.TopMargin = 0.35
-ActiveSheet.PageSetup.LeftMargin = 0.35
-ActiveSheet.PageSetup.Orientation = xlLandscape
+With ActiveSheet.PageSetup
+    .TopMargin = Application.CentimetersToPoints(1)
+    .LeftMargin = Application.CentimetersToPoints(0.5)
+    .RightMargin = Application.CentimetersToPoints(0.5)
+    .Orientation = xlLandscape
+    .PrintTitleRows = "$1:$1"
+End With
+
+Dim myRng As Worksheet
+Set myRng = ActiveWorkbook.ActiveSheet
+With myRng.Sort
+    With .SortFields
+        .Clear
+        .Add Key:=Range("H1"), _
+                 SortOn:=xlSortOnValues, _
+                 Order:=xlAscending, _
+                 DataOption:=xlSortTextAsNumbers
+    End With
+    .SetRange Range("A1").CurrentRegion     '並べ替え範囲を設定
+    .Header = xlYes                         '先頭行を見出しとして使用
+    .MatchCase = False                      '大文字小文字を区別しない
+    .Orientation = xlTopToBottom            '行単位で並べ替え
+    .Apply                                  '並べ替えを実行
+End With
+Dim i As Long
+For i = 2 To Cells(65536, 1).End(xlUp).Row
+    Cells(i, 8).Value = Cells(i, 8).Value
+Next
+i = 0
+For i = Cells(65536, 1).End(xlUp).Row To 2 Step -1
+    If Cells(i, 8).Value < 10 Then
+        Cells(i, 8).EntireRow.Delete
+    End If
+Next
+
+'ActiveSheet.PageSetup.TopMargin = 0.35
+'ActiveSheet.PageSetup.LeftMargin = 0.35
+'ActiveSheet.PageSetup.Orientation = xlLandscape
+
+
+
 End Sub
+
+
 
 Sub 単品各店()
 Application.ScreenUpdating = False
